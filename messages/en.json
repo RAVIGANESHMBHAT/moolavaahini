@@ -1,0 +1,102 @@
+{
+  "nav": {
+    "havyaka": "Havyaka",
+    "generalKannada": "General Kannada",
+    "search": "Search",
+    "write": "Write",
+    "community": "Community",
+    "signIn": "Sign in",
+    "myPosts": "My Posts",
+    "admin": "Admin Panel",
+    "signOut": "Sign out"
+  },
+  "home": {
+    "tagline": "Preserving and sharing the living wisdom of our communities — through stories, proverbs, recipes, and rituals.",
+    "contribute": "Contribute",
+    "browseAll": "Browse All",
+    "communities": "Communities",
+    "havyakaDesc": "Traditions, rituals, and wisdom from the Havyaka Brahmin community of Karnataka",
+    "generalKannadaDesc": "Broader Kannada culture, proverbs, and heritage",
+    "exploreByCategory": "Explore by Category",
+    "recentContributions": "Recent Contributions",
+    "noContent": "No content published yet. Be the first to contribute!"
+  },
+  "post": {
+    "backTo": "Back to {community}",
+    "feedback": "Feedback:",
+    "edit": "Edit",
+    "translate": "Translate to English",
+    "translating": "Translating…",
+    "translationNote": "AI-translated · Original content is in Kannada",
+    "viewOriginal": "View original"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search content...",
+    "resultsFor": "{count} result(s) for \"{query}\"",
+    "results": "{count} result(s)",
+    "searching": "Searching…",
+    "noResults": "No results found. Try a different search."
+  },
+  "category": {
+    "all": "All",
+    "categories": "Categories"
+  },
+  "status": {
+    "draft": "Draft",
+    "pending_review": "Pending Review",
+    "approved": "Published",
+    "rejected": "Rejected"
+  },
+  "dashboard": {
+    "title": "My Posts",
+    "writeNew": "Write New",
+    "empty": "You haven't written anything yet.",
+    "startWriting": "Start Writing",
+    "submit": "Submit",
+    "edit": "Edit",
+    "feedback": "Feedback:"
+  },
+  "editor": {
+    "newPost": "New Post",
+    "editPost": "Edit Post",
+    "newPostDesc": "Write your contribution. Save as draft or submit for review.",
+    "editPostDesc": "Make changes and save or resubmit for review.",
+    "titlePlaceholder": "Enter a descriptive title...",
+    "applyTemplate": "Apply template",
+    "useTemplate": "Use the {category} template?",
+    "saveDraft": "Save Draft",
+    "submitReview": "Submit for Review"
+  },
+  "auth": {
+    "welcome": "Welcome to Moolavaahini",
+    "subtitle": "Sign in to contribute to our cultural knowledge archive",
+    "continueWithGoogle": "Continue with Google",
+    "disclaimer": "By signing in, you agree to contribute knowledge respectfully and authentically."
+  },
+  "admin": {
+    "overview": "Overview",
+    "reviewQueue": "Review Queue",
+    "totalPosts": "Total Posts",
+    "pendingReview": "Pending Review",
+    "published": "Published",
+    "registeredUsers": "Registered Users",
+    "noPending": "No posts pending review.",
+    "approve": "Approve & Publish",
+    "reject": "Reject",
+    "confirmReject": "Confirm Reject",
+    "cancel": "Cancel",
+    "rejectionReason": "Rejection reason",
+    "rejectionPlaceholder": "Explain why this post is being rejected..."
+  },
+  "errors": {
+    "translationFailed": "Translation failed. Please try again."
+  },
+  "locale": {
+    "toggle": "ಕನ್ನಡ"
+  },
+  "footer": {
+    "tagline": "Preserving cultural knowledge for future generations.",
+    "about": "About"
+  }
+}
