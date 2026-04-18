@@ -92,7 +92,7 @@ create policy "posts_select"
   using (
     status = 'approved'
     or author_id = auth.uid()
-    or public.get_my_role() in ('contributor', 'admin')
+    or public.get_my_role() = 'admin'
   );
 
 -- INSERT: authenticated users only; status must be 'draft'
@@ -105,17 +105,17 @@ create policy "posts_insert_authenticated"
   );
 
 -- UPDATE: authors can edit own draft/rejected/approved posts and submit for review (→ pending_review)
---         contributors/admins can update any field
+--         admins can update any field
 create policy "posts_update_author"
   on public.posts for update
   using (
     (author_id = auth.uid() and status in ('draft', 'rejected', 'approved', 'pending_review'))
-    or public.get_my_role() in ('contributor', 'admin')
+    or public.get_my_role() = 'admin'
   )
   with check (
     -- Authors can save edits or re-queue approved posts for review (→ pending_review)
     (author_id = auth.uid() and status in ('draft', 'rejected', 'pending_review', 'approved'))
-    or public.get_my_role() in ('contributor', 'admin')
+    or public.get_my_role() = 'admin'
   );
 
 -- DELETE: authors can delete their own posts at any status; admins can delete anything

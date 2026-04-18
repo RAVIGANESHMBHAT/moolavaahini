@@ -12,7 +12,7 @@ export type ReviewResult =
 
 export async function approvePost(id: string, updatedAt: string): Promise<ReviewResult> {
   const user = await requireAuth()
-  await requireRole(user.id, 'contributor')
+  await requireRole(user.id, 'admin')
 
   const supabase = await createClient()
 
@@ -90,7 +90,7 @@ export async function approvePost(id: string, updatedAt: string): Promise<Review
 
 export async function rejectPost(id: string, reason: string, updatedAt: string): Promise<ReviewResult> {
   const user = await requireAuth()
-  await requireRole(user.id, 'contributor')
+  await requireRole(user.id, 'admin')
 
   if (!reason?.trim()) {
     return { success: false, error: 'Rejection reason is required' }
