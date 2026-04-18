@@ -74,7 +74,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
         <p className="mt-2 text-gray-500">{count ?? 0} piece{(count ?? 0) !== 1 ? 's' : ''} of content</p>
       </div>
 
-      <div className="flex gap-8">
+      <div className="md:flex md:gap-8">
         <Sidebar community={community} categories={categories ?? []} />
         <div className="flex-1">
           {categoryData.slug === 'ogatu' ? (

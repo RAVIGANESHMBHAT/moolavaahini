@@ -75,7 +75,7 @@ export default async function CommunityPage({ params, searchParams }: PageProps)
         )}
       </div>
 
-      <div className="flex gap-8">
+      <div className="md:flex md:gap-8">
         <Sidebar community={community} categories={categories ?? []} />
         <div className="flex-1">
           <PostList posts={typedPosts} emptyMessage={`No content from ${communityData.name} yet.`} />
