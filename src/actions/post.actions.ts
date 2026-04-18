@@ -184,14 +184,13 @@ export async function discardPendingEdit(id: string): Promise<{ success: boolean
     .eq('id', id)
     .single()
 
-  const post = postData as unknown as { author_id: string; status: string; slug: string } | null
+  const post = postData as { author_id: string; status: string; slug: string } | null
 
   if (!post) return { success: false, error: 'Post not found' }
   if (post.author_id !== user.id) return { success: false, error: 'Not authorized' }
   if (post.status !== 'approved') return { success: false, error: 'Only approved posts can have a pending edit discarded' }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error } = await (supabase as any)
+  const { error } = await supabase
     .from('posts')
     .update({
       pending_title: null,
@@ -219,13 +218,12 @@ export async function clearEditRejection(id: string): Promise<{ success: boolean
     .eq('id', id)
     .single()
 
-  const post = postData as unknown as { author_id: string; status: string } | null
+  const post = postData as { author_id: string; status: string } | null
   if (!post) return { success: false, error: 'Post not found' }
   if (post.author_id !== user.id) return { success: false, error: 'Not authorized' }
   if (post.status !== 'approved') return { success: false, error: 'Not applicable' }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { error } = await (supabase as any)
+  const { error } = await supabase
     .from('posts')
     .update({ rejection_reason: null })
     .eq('id', id)

@@ -9,7 +9,7 @@ export function DeleteButton({ postId }: { postId: string }) {
   const [open, setOpen] = useState(false)
 
   const handleConfirm = () => {
-    startTransition(() => deletePost(postId))
+    startTransition(async () => { await deletePost(postId) })
   }
 
   return (
