@@ -1,6 +1,7 @@
 import type { Config } from 'tailwindcss'
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -9,6 +10,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        // ── Semantic tokens (CSS variable backed) ──
+        bg:       'var(--color-bg)',
+        surface:  'var(--color-surface)',
+        surface2: 'var(--color-surface-2)',
+        surface3: 'var(--color-surface-3)',
+        border:    'var(--color-border)',
+        border2:   'var(--color-border-2)',
+        border3:   'var(--color-border-3)',
+        tx:        'var(--color-text)',
+        tx2:       'var(--color-text-2)',
+        tx3:       'var(--color-text-3)',
+        tx4:       'var(--color-text-4)',
+        // ── Brand ──
         saffron: {
           50: '#fff8ed',
           100: '#ffefd3',

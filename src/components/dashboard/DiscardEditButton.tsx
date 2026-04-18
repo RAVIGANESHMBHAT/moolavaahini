@@ -28,11 +28,11 @@ export function DiscardEditButton({ postId }: { postId: string }) {
       <button
         onClick={() => setOpen(true)}
         disabled={isPending}
-        className="w-full rounded-lg border border-red-300 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50 sm:w-auto"
+        className="w-full rounded-lg border border-red-300 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50 dark:border-red-800 dark:hover:bg-red-950/40 sm:w-auto"
       >
         {isPending ? 'Reverting…' : 'Revert to published version'}
       </button>
-      {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+      {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
       <ConfirmDialog
         open={open}
         onClose={() => setOpen(false)}

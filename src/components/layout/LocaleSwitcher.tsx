@@ -22,7 +22,7 @@ export function LocaleSwitcher() {
     <button
       onClick={toggle}
       disabled={isPending}
-      className="rounded-lg border border-gray-300 px-2.5 py-1.5 text-xs font-semibold text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+      className="rounded-lg border border-border2 px-2.5 py-1.5 text-xs font-semibold text-tx3 hover:bg-surface2 disabled:opacity-50"
       aria-label="Switch language"
     >
       {t('toggle')}

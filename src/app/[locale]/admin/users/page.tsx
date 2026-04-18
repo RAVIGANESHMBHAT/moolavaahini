@@ -20,30 +20,30 @@ export default async function UsersPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">Registered Users</h1>
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
+      <h1 className="mb-6 text-2xl font-bold text-tx">Registered Users</h1>
+      <div className="overflow-x-auto rounded-xl border border-border bg-surface">
+        <table className="min-w-full divide-y divide-border text-sm">
+          <thead className="bg-surface2">
             <tr>
-              <th className="px-5 py-3 text-left font-medium text-gray-500">User</th>
-              <th className="px-5 py-3 text-left font-medium text-gray-500">Joined</th>
-              <th className="px-5 py-3 text-left font-medium text-gray-500">Role</th>
+              <th className="px-5 py-3 text-left font-medium text-tx3">User</th>
+              <th className="px-5 py-3 text-left font-medium text-tx3">Joined</th>
+              <th className="px-5 py-3 text-left font-medium text-tx3">Role</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100">
+          <tbody className="divide-y divide-border3">
             {(profiles ?? []).map((p) => (
               <tr key={p.id}>
                 <td className="px-5 py-3">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-saffron-100 text-xs font-semibold text-saffron-700">
+                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-saffron-100 text-xs font-semibold text-saffron-700 dark:bg-saffron-900 dark:text-saffron-300">
                       {p.display_name?.slice(0, 2).toUpperCase() ?? '?'}
                     </div>
-                    <span className="font-medium text-gray-900">
-                      {p.display_name ?? <span className="italic text-gray-400">No name</span>}
+                    <span className="font-medium text-tx">
+                      {p.display_name ?? <span className="italic text-tx4">No name</span>}
                     </span>
                   </div>
                 </td>
-                <td className="px-5 py-3 text-gray-500">{formatDate(p.created_at)}</td>
+                <td className="px-5 py-3 text-tx3">{formatDate(p.created_at)}</td>
                 <td className="px-5 py-3">
                   <RoleSelector userId={p.id} currentRole={p.role} isSelf={p.id === user.id} />
                 </td>

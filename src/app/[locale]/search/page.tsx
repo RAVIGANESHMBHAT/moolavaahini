@@ -13,49 +13,26 @@ interface PageProps {
   searchParams: Promise<{ q?: string; category?: string; page?: string }>
 }
 
-async function SearchResults({
-  query,
-  category,
-  page,
-}: {
-  query: string
-  category?: string
-  page: number
-}) {
+async function SearchResults({ query, category, page }: { query: string; category?: string; page: number }) {
   const supabase = await createClient()
   const from = (page - 1) * PAGE_SIZE
   const to = from + PAGE_SIZE - 1
 
   let queryBuilder = supabase
     .from('posts')
-    .select(`
-      *,
-      community:communities!posts_community_id_fkey(id, name, slug),
-      category:categories!posts_category_id_fkey(id, name, slug),
-      author:profiles!posts_author_id_fkey(id, display_name, avatar_url)
-    `, { count: 'exact' })
+    .select(`*, community:communities!posts_community_id_fkey(id, name, slug), category:categories!posts_category_id_fkey(id, name, slug), author:profiles!posts_author_id_fkey(id, display_name, avatar_url)`, { count: 'exact' })
     .eq('status', 'approved')
 
   if (query.trim()) {
-    queryBuilder = queryBuilder.textSearch('search_vector', query.trim(), {
-      type: 'websearch',
-      config: 'english',
-    })
+    queryBuilder = queryBuilder.textSearch('search_vector', query.trim(), { type: 'websearch', config: 'english' })
   }
 
   if (category) {
-    const { data: cat } = await supabase
-      .from('categories')
-      .select('id')
-      .eq('slug', category)
-      .single()
+    const { data: cat } = await supabase.from('categories').select('id').eq('slug', category).single()
     if (cat) queryBuilder = queryBuilder.eq('category_id', cat.id)
   }
 
-  const { data: posts, count } = await queryBuilder
-    .order('published_at', { ascending: false })
-    .range(from, to)
-
+  const { data: posts, count } = await queryBuilder.order('published_at', { ascending: false }).range(from, to)
   const typedPosts = (posts ?? []) as unknown as PostWithDetails[]
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE)
 
@@ -70,7 +47,7 @@ async function SearchResults({
 
   return (
     <>
-      <p className="mb-4 text-sm text-gray-500">
+      <p className="mb-4 text-sm text-tx3">
         {count ?? 0} result{(count ?? 0) !== 1 ? 's' : ''}
         {query ? ` for "${query}"` : ''}
       </p>
@@ -86,9 +63,9 @@ export default async function SearchPage({ searchParams }: PageProps) {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">Search</h1>
+      <h1 className="mb-6 text-2xl font-bold text-tx">Search</h1>
       <SearchBar className="mb-8 max-w-xl" />
-      <Suspense fallback={<p className="text-sm text-gray-500">Searching…</p>}>
+      <Suspense fallback={<p className="text-sm text-tx3">Searching…</p>}>
         <SearchResults query={q} category={category} page={page} />
       </Suspense>
     </div>

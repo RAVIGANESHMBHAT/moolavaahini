@@ -41,12 +41,7 @@ export default async function CommunityPage({ params, searchParams }: PageProps)
 
   const { data: posts, count } = await supabase
     .from('posts')
-    .select(`
-      *,
-      community:communities!posts_community_id_fkey(id, name, slug),
-      category:categories!posts_category_id_fkey(id, name, slug),
-      author:profiles!posts_author_id_fkey(id, display_name, avatar_url)
-    `, { count: 'exact' })
+    .select(`*, community:communities!posts_community_id_fkey(id, name, slug), category:categories!posts_category_id_fkey(id, name, slug), author:profiles!posts_author_id_fkey(id, display_name, avatar_url)`, { count: 'exact' })
     .eq('status', 'approved')
     .eq('community_id', communityData.id)
     .order('published_at', { ascending: false })
@@ -54,22 +49,17 @@ export default async function CommunityPage({ params, searchParams }: PageProps)
 
   const typedPosts = (posts ?? []) as unknown as PostWithDetails[]
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE)
-
-  const buildHref = (p: number) =>
-    p === 1 ? `/${community}` : `/${community}?page=${p}`
+  const buildHref = (p: number) => p === 1 ? `/${community}` : `/${community}?page=${p}`
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <div className="mb-8 flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">{communityData.name}</h1>
-          <p className="mt-2 text-gray-500">{count ?? 0} piece{(count ?? 0) !== 1 ? 's' : ''} of content</p>
+          <h1 className="text-3xl font-bold text-tx">{communityData.name}</h1>
+          <p className="mt-2 text-tx3">{count ?? 0} piece{(count ?? 0) !== 1 ? 's' : ''} of content</p>
         </div>
         {user && (
-          <Link
-            href={`/posts/new?community=${community}`}
-            className="rounded-xl bg-saffron-600 px-4 py-2 text-sm font-semibold text-white hover:bg-saffron-700"
-          >
+          <Link href={`/posts/new?community=${community}`} className="rounded-xl bg-saffron-600 px-4 py-2 text-sm font-semibold text-white hover:bg-saffron-700">
             Write in {communityData.name}
           </Link>
         )}

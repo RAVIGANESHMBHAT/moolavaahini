@@ -5,6 +5,7 @@ import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { routing } from '@/i18n/routing'
 import '../globals.css'
+import { ThemeProvider } from '@/lib/theme'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 
@@ -46,11 +47,13 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} className={`${inter.variable} ${notoSansKannada.variable}`}>
       <body className="flex min-h-screen flex-col font-sans">
-        <NextIntlClientProvider messages={messages}>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </NextIntlClientProvider>
+        <ThemeProvider>
+          <NextIntlClientProvider messages={messages}>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   )

@@ -32,22 +32,16 @@ export default async function DashboardPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
       <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">My Posts</h1>
-        <Link
-          href="/posts/new"
-          className="rounded-lg bg-saffron-600 px-4 py-2 text-sm font-medium text-white hover:bg-saffron-700"
-        >
+        <h1 className="text-2xl font-bold text-tx">My Posts</h1>
+        <Link href="/posts/new" className="rounded-lg bg-saffron-600 px-4 py-2 text-sm font-medium text-white hover:bg-saffron-700">
           Write New
         </Link>
       </div>
 
       {typedPosts.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 py-20 text-center">
-          <p className="mb-4 text-sm text-gray-500">You haven't written anything yet.</p>
-          <Link
-            href="/posts/new"
-            className="rounded-lg bg-saffron-600 px-4 py-2 text-sm font-medium text-white hover:bg-saffron-700"
-          >
+        <div className="rounded-xl border border-dashed border-border2 bg-surface2 py-20 text-center">
+          <p className="mb-4 text-sm text-tx3">You haven't written anything yet.</p>
+          <Link href="/posts/new" className="rounded-lg bg-saffron-600 px-4 py-2 text-sm font-medium text-white hover:bg-saffron-700">
             Start Writing
           </Link>
         </div>
@@ -59,34 +53,29 @@ export default async function DashboardPage() {
               <section key={status}>
                 <div className="mb-3 flex items-center gap-2">
                   <PostStatusBadge status={status} />
-                  <span className="text-sm text-gray-500">({items.length})</span>
+                  <span className="text-sm text-tx3">({items.length})</span>
                 </div>
-                <div className="divide-y divide-gray-200 rounded-xl border border-gray-200 bg-white">
+                <div className="divide-y divide-border rounded-xl border border-border bg-surface">
                   {items.map((post) => (
                     <div key={post.id} className="flex items-center justify-between gap-4 px-5 py-4">
                       <div className="min-w-0 flex-1">
-                        <Link
-                          href={`/posts/${post.slug}`}
-                          className="block truncate font-medium text-gray-900 hover:text-saffron-700"
-                        >
+                        <Link href={`/posts/${post.slug}`} className="block truncate font-medium text-tx hover:text-saffron-700 dark:hover:text-saffron-400">
                           {post.title}
                         </Link>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-tx3">
                           {post.community.name} · {post.category.name} · {formatDate(post.created_at)}
                         </p>
                         {post.status === 'rejected' && post.rejection_reason && (
-                          <p className="mt-1 text-xs text-red-600">
-                            Feedback: {post.rejection_reason}
-                          </p>
+                          <p className="mt-1 text-xs text-red-500">Feedback: {post.rejection_reason}</p>
                         )}
                         {post.status === 'approved' && post.pending_submitted_at && (
-                          <p className="mt-1 text-xs text-blue-600">Edit under review</p>
+                          <p className="mt-1 text-xs text-blue-500 dark:text-blue-400">Edit under review</p>
                         )}
                         {post.status === 'approved' && post.pending_title && !post.pending_submitted_at && (
-                          <p className="mt-1 text-xs text-amber-600">Unpublished edit — not yet submitted for review</p>
+                          <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">Unpublished edit — not yet submitted for review</p>
                         )}
                         {post.status === 'approved' && post.rejection_reason && !post.pending_title && (
-                          <p className="mt-1 text-xs text-red-600">
+                          <p className="mt-1 text-xs text-red-500">
                             Edit rejected: {post.rejection_reason}
                             <DismissRejectionButton postId={post.id} />
                           </p>
@@ -94,16 +83,11 @@ export default async function DashboardPage() {
                       </div>
                       <div className="flex shrink-0 items-center gap-2">
                         {['draft', 'rejected', 'approved', 'pending_review'].includes(post.status) && (
-                          <Link
-                            href={`/dashboard/edit/${post.id}`}
-                            className="rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
-                          >
+                          <Link href={`/dashboard/edit/${post.id}`} className="rounded-lg border border-border2 px-3 py-1.5 text-xs font-medium text-tx2 hover:bg-surface2">
                             Edit
                           </Link>
                         )}
-                        {['draft', 'rejected'].includes(post.status) && (
-                          <SubmitButton postId={post.id} />
-                        )}
+                        {['draft', 'rejected'].includes(post.status) && <SubmitButton postId={post.id} />}
                         <DeleteButton postId={post.id} />
                       </div>
                     </div>

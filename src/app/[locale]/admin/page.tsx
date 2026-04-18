@@ -33,15 +33,19 @@ export default async function AdminPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-gray-900">Overview</h1>
+      <h1 className="mb-6 text-2xl font-bold text-tx">Overview</h1>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className={`rounded-xl border p-5 ${stat.highlight ? 'border-yellow-300 bg-yellow-50' : 'border-gray-200 bg-white'}`}
+            className={`rounded-xl border p-5 ${
+              stat.highlight
+                ? 'border-[var(--color-warn-border)] bg-[var(--color-warn-bg)]'
+                : 'border-border bg-surface'
+            }`}
           >
-            <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
-            <p className="mt-1 text-sm text-gray-500">{stat.label}</p>
+            <p className="text-3xl font-bold text-tx">{stat.value}</p>
+            <p className="mt-1 text-sm text-tx3">{stat.label}</p>
           </div>
         ))}
       </div>

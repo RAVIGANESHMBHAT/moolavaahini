@@ -16,24 +16,24 @@ export function PostCard({ post, showStatus = false }: PostCardProps) {
 
   return (
     <Link href={`/posts/${post.slug}`} className="group block">
-      <article className="rounded-xl border border-gray-200 bg-white p-5 transition-shadow hover:shadow-md">
+      <article className="rounded-xl border border-border bg-surface p-5 transition-shadow hover:shadow-md">
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <Badge variant="saffron">{post.community.name}</Badge>
           <Badge variant="blue">{post.category.name}</Badge>
           {showStatus && <PostStatusBadge status={post.status} />}
         </div>
 
-        <h2 className="mb-2 text-lg font-semibold text-gray-900 group-hover:text-saffron-700 line-clamp-2">
+        <h2 className="mb-2 text-lg font-semibold text-tx group-hover:text-saffron-700 dark:group-hover:text-saffron-400 line-clamp-2">
           {post.title}
         </h2>
 
         {isOgatu ? (
-          <p className="mb-4 text-xs font-medium text-saffron-600">🤔 Can you guess the answer?</p>
+          <p className="mb-4 text-xs font-medium text-saffron-600 dark:text-saffron-400">🤔 Can you guess the answer?</p>
         ) : preview ? (
-          <p className="mb-4 text-sm text-gray-500 line-clamp-2">{preview}</p>
+          <p className="mb-4 text-sm text-tx3 line-clamp-2">{preview}</p>
         ) : null}
 
-        <div className="flex items-center gap-2 text-xs text-gray-400">
+        <div className="flex items-center gap-2 text-xs text-tx4">
           {post.author.avatar_url ? (
             <Image
               src={post.author.avatar_url}
@@ -43,7 +43,7 @@ export function PostCard({ post, showStatus = false }: PostCardProps) {
               className="rounded-full"
             />
           ) : (
-            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-saffron-100 text-[10px] font-semibold text-saffron-700">
+            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-saffron-100 text-[10px] font-semibold text-saffron-700 dark:bg-saffron-900 dark:text-saffron-300">
               {post.author.display_name?.slice(0, 1).toUpperCase() ?? 'U'}
             </div>
           )}

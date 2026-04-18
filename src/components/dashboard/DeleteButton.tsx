@@ -17,7 +17,7 @@ export function DeleteButton({ postId }: { postId: string }) {
       <button
         onClick={() => setOpen(true)}
         disabled={isPending}
-        className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+        className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50 dark:border-red-900 dark:hover:bg-red-950/40"
       >
         {isPending ? 'Deleting…' : 'Delete'}
       </button>

@@ -46,32 +46,23 @@ export function ReviewActions({ postId, postUpdatedAt }: ReviewActionsProps) {
   };
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
-      <h3 className="mb-3 text-sm font-semibold text-gray-700">
+    <div className="rounded-xl border border-border bg-surface2 p-5">
+      <h3 className="mb-3 text-sm font-semibold text-tx2">
         Review Actions
       </h3>
 
       {error && (
-        <div className="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+        <div className="mb-3 rounded-lg bg-[var(--color-danger-bg)] px-3 py-2 text-sm text-[var(--color-danger-text)]">
           {error}
         </div>
       )}
 
       {!showRejectForm ? (
         <div className="flex flex-wrap gap-3">
-          <Button
-            variant="primary"
-            onClick={handleApprove}
-            loading={isApproving}
-            disabled={isRejecting}
-          >
+          <Button variant="primary" onClick={handleApprove} loading={isApproving} disabled={isRejecting}>
             Approve & Publish
           </Button>
-          <Button
-            variant="danger"
-            onClick={() => setShowRejectForm(true)}
-            disabled={isApproving || isRejecting}
-          >
+          <Button variant="danger" onClick={() => setShowRejectForm(true)} disabled={isApproving || isRejecting}>
             Reject
           </Button>
         </div>
@@ -86,22 +77,10 @@ export function ReviewActions({ postId, postUpdatedAt }: ReviewActionsProps) {
             required
           />
           <div className="flex gap-3">
-            <Button
-              variant="danger"
-              onClick={handleReject}
-              loading={isRejecting}
-              disabled={!reason.trim()}
-            >
+            <Button variant="danger" onClick={handleReject} loading={isRejecting} disabled={!reason.trim()}>
               Confirm Reject
             </Button>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setShowRejectForm(false);
-                setReason("");
-              }}
-              disabled={isRejecting}
-            >
+            <Button variant="ghost" onClick={() => { setShowRejectForm(false); setReason(""); }} disabled={isRejecting}>
               Cancel
             </Button>
           </div>

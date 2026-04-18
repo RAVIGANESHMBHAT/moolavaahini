@@ -29,7 +29,7 @@ export function SearchBar({ placeholder = 'Search content...', className }: Sear
   return (
     <div className={cn('relative', className)}>
       <svg
-        className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400"
+        className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-tx4"
         viewBox="0 0 20 20"
         fill="currentColor"
       >
@@ -40,7 +40,7 @@ export function SearchBar({ placeholder = 'Search content...', className }: Sear
         defaultValue={searchParams.get('q') ?? ''}
         onChange={handleChange}
         placeholder={placeholder}
-        className="w-full rounded-xl border border-gray-300 bg-white py-2.5 pl-10 pr-4 text-sm focus:border-saffron-500 focus:outline-none focus:ring-2 focus:ring-saffron-500/20"
+        className="w-full rounded-xl border border-border2 bg-surface py-2.5 pl-10 pr-4 text-sm text-tx placeholder:text-tx4 focus:border-saffron-500 focus:outline-none focus:ring-2 focus:ring-saffron-500/20"
       />
     </div>
   )

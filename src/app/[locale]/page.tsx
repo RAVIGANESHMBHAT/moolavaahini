@@ -15,12 +15,7 @@ export default async function HomePage() {
     supabase.from('categories').select('id, name, slug, icon').order('name'),
     supabase
       .from('posts')
-      .select(`
-        *,
-        community:communities!posts_community_id_fkey(id, name, slug),
-        category:categories!posts_category_id_fkey(id, name, slug),
-        author:profiles!posts_author_id_fkey(id, display_name, avatar_url)
-      `)
+      .select(`*, community:communities!posts_community_id_fkey(id, name, slug), category:categories!posts_category_id_fkey(id, name, slug), author:profiles!posts_author_id_fkey(id, display_name, avatar_url)`)
       .eq('status', 'approved')
       .order('published_at', { ascending: false })
       .limit(12),
@@ -32,24 +27,16 @@ export default async function HomePage() {
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       {/* Hero */}
       <section className="mb-16 text-center">
-        <h1 className="mb-4 text-4xl font-bold text-gray-900 sm:text-5xl">
-          ಮೂಲವಾಹಿನಿ
-        </h1>
-        <p className="mx-auto max-w-2xl text-lg text-gray-600">
+        <h1 className="mb-4 text-4xl font-bold text-tx sm:text-5xl">ಮೂಲವಾಹಿನಿ</h1>
+        <p className="mx-auto max-w-2xl text-lg text-tx3">
           Preserving and sharing the living wisdom of our communities —
           through stories, proverbs, recipes, and rituals.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link
-            href="/posts/new"
-            className="rounded-xl bg-saffron-600 px-6 py-3 text-sm font-semibold text-white hover:bg-saffron-700"
-          >
+          <Link href="/posts/new" className="rounded-xl bg-saffron-600 px-6 py-3 text-sm font-semibold text-white hover:bg-saffron-700">
             Contribute
           </Link>
-          <Link
-            href="/search"
-            className="rounded-xl border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50"
-          >
+          <Link href="/search" className="rounded-xl border border-border2 bg-surface px-6 py-3 text-sm font-semibold text-tx2 hover:bg-surface2">
             Browse All
           </Link>
         </div>
@@ -57,18 +44,12 @@ export default async function HomePage() {
 
       {/* Communities */}
       <section className="mb-16">
-        <h2 className="mb-6 text-xl font-semibold text-gray-900">Communities</h2>
+        <h2 className="mb-6 text-xl font-semibold text-tx">Communities</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {communities.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/${c.slug}`}
-              className="group rounded-xl border border-gray-200 bg-white p-6 transition-shadow hover:shadow-md"
-            >
-              <h3 className="mb-2 text-lg font-semibold text-gray-900 group-hover:text-saffron-700">
-                {c.name}
-              </h3>
-              <p className="text-sm text-gray-500">{c.description}</p>
+            <Link key={c.slug} href={`/${c.slug}`} className="group rounded-xl border border-border bg-surface p-6 transition-shadow hover:shadow-md">
+              <h3 className="mb-2 text-lg font-semibold text-tx group-hover:text-saffron-700 dark:group-hover:text-saffron-400">{c.name}</h3>
+              <p className="text-sm text-tx3">{c.description}</p>
             </Link>
           ))}
         </div>
@@ -76,13 +57,13 @@ export default async function HomePage() {
 
       {/* Categories */}
       <section className="mb-16">
-        <h2 className="mb-6 text-xl font-semibold text-gray-900">Explore by Category</h2>
+        <h2 className="mb-6 text-xl font-semibold text-tx">Explore by Category</h2>
         <div className="flex flex-wrap gap-3">
           {(categories ?? []).map((cat) => (
             <Link
               key={cat.slug}
               href={`/search?category=${cat.slug}`}
-              className="flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:border-saffron-300 hover:bg-saffron-50 hover:text-saffron-700"
+              className="flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-medium text-tx3 hover:border-saffron-300 hover:bg-saffron-50 hover:text-saffron-700 dark:hover:bg-saffron-950 dark:hover:text-saffron-300"
             >
               {cat.icon && <span>{cat.icon}</span>}
               {cat.name}
@@ -94,15 +75,12 @@ export default async function HomePage() {
       {/* Recent posts */}
       <section>
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-900">Recent Contributions</h2>
-          <Link href="/search" className="text-sm font-medium text-saffron-600 hover:underline">
+          <h2 className="text-xl font-semibold text-tx">Recent Contributions</h2>
+          <Link href="/search" className="text-sm font-medium text-saffron-600 hover:underline dark:text-saffron-400">
             View all →
           </Link>
         </div>
-        <PostList
-          posts={typedPosts}
-          emptyMessage="No content published yet. Be the first to contribute!"
-        />
+        <PostList posts={typedPosts} emptyMessage="No content published yet. Be the first to contribute!" />
       </section>
     </div>
   )

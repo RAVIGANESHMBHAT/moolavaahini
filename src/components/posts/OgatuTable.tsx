@@ -26,41 +26,39 @@ export function OgatuTable({ posts }: { posts: PostWithDetails[] }) {
 
   if (posts.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 py-16 text-center">
-        <p className="text-sm text-gray-500">No riddles yet.</p>
+      <div className="rounded-xl border border-dashed border-border2 bg-surface2 py-16 text-center">
+        <p className="text-sm text-tx3">No riddles yet.</p>
       </div>
     )
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-      {/* Header row */}
-      <div className="flex items-center justify-between border-b border-gray-200 px-5 py-3">
-        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+    <div className="overflow-hidden rounded-xl border border-border bg-surface">
+      <div className="flex items-center justify-between border-b border-border px-5 py-3">
+        <p className="text-xs font-semibold uppercase tracking-wider text-tx3">
           {posts.length} riddle{posts.length !== 1 ? 's' : ''}
         </p>
         <button
           onClick={toggleAll}
-          className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50"
+          className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-tx3 hover:bg-surface2"
         >
           {allRevealed ? 'Hide All' : 'Reveal All'}
         </button>
       </div>
 
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-border3">
         {posts.map((post, i) => {
           const revealed = revealedIds.has(post.id)
           return (
             <div key={post.id} className="px-5 py-4">
-              {/* Riddle row */}
               <div className="flex items-start justify-between gap-4">
                 <div className="flex min-w-0 items-start gap-3">
-                  <span className="mt-0.5 shrink-0 text-xs font-medium text-gray-400">
+                  <span className="mt-0.5 shrink-0 text-xs font-medium text-tx4">
                     {i + 1}.
                   </span>
                   <Link
                     href={`/posts/${post.slug}`}
-                    className="text-sm font-medium text-gray-900 hover:text-saffron-700"
+                    className="text-sm font-medium text-tx hover:text-saffron-700 dark:hover:text-saffron-400"
                   >
                     {post.title}
                   </Link>
@@ -70,24 +68,23 @@ export function OgatuTable({ posts }: { posts: PostWithDetails[] }) {
                     onClick={() => toggleReveal(post.id)}
                     className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
                       revealed
-                        ? 'bg-saffron-100 text-saffron-700 hover:bg-saffron-200'
-                        : 'border border-saffron-300 text-saffron-600 hover:bg-saffron-50'
+                        ? 'bg-saffron-100 text-saffron-700 hover:bg-saffron-200 dark:bg-saffron-900/40 dark:text-saffron-300'
+                        : 'border border-saffron-300 text-saffron-600 hover:bg-saffron-50 dark:border-saffron-700 dark:hover:bg-saffron-950/40'
                     }`}
                   >
                     {revealed ? 'Hide' : '🤔 Reveal'}
                   </button>
                 ) : (
-                  <span className="shrink-0 text-xs text-gray-400 italic">No answer</span>
+                  <span className="shrink-0 text-xs text-tx4 italic">No answer</span>
                 )}
               </div>
 
-              {/* Answer */}
               {revealed && post.body && (
-                <div className="mt-3 ml-6 rounded-lg border border-saffron-100 bg-saffron-50 px-4 py-2.5">
-                  <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-saffron-600">
+                <div className="mt-3 ml-6 rounded-lg border border-saffron-100 bg-saffron-50 px-4 py-2.5 dark:border-saffron-900 dark:bg-saffron-950/40">
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-saffron-600 dark:text-saffron-400">
                     Answer
                   </p>
-                  <p className="text-sm text-gray-800">{post.body}</p>
+                  <p className="text-sm text-tx">{post.body}</p>
                 </div>
               )}
             </div>

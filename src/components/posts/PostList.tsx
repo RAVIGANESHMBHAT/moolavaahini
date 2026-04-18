@@ -10,8 +10,8 @@ interface PostListProps {
 export function PostList({ posts, showStatus, emptyMessage = 'No content found.' }: PostListProps) {
   if (posts.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 py-16 text-center">
-        <p className="text-sm text-gray-500">{emptyMessage}</p>
+      <div className="rounded-xl border border-dashed border-border2 bg-surface2 py-16 text-center">
+        <p className="text-sm text-tx3">{emptyMessage}</p>
       </div>
     )
   }

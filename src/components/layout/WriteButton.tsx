@@ -6,11 +6,8 @@ const COMMUNITY_SLUGS = ['havyaka', 'general-kannada']
 
 export function WriteButton() {
   const pathname = usePathname()
-
-  // pathname from next-intl is without the locale prefix, e.g. "/havyaka/ogatu"
   const segment = pathname.split('/')[1]
   const community = COMMUNITY_SLUGS.includes(segment) ? segment : null
-
   const href = community ? `/posts/new?community=${community}` : '/posts/new'
 
   return (

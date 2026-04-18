@@ -12,11 +12,9 @@ export function Pagination({ page, totalPages, buildHref }: PaginationProps) {
   const prev = page - 1
   const next = page + 1
 
-  // Build window: always show first, last, current ±1
   const pages = new Set([1, totalPages, page, prev, next].filter((p) => p >= 1 && p <= totalPages))
   const sorted = Array.from(pages).sort((a, b) => a - b)
 
-  // Insert ellipsis markers
   const items: (number | 'ellipsis')[] = []
   for (let i = 0; i < sorted.length; i++) {
     if (i > 0 && sorted[i] - sorted[i - 1] > 1) items.push('ellipsis')
@@ -30,8 +28,8 @@ export function Pagination({ page, totalPages, buildHref }: PaginationProps) {
         aria-disabled={page === 1}
         className={`flex h-9 w-9 items-center justify-center rounded-lg border text-sm font-medium transition-colors ${
           page === 1
-            ? 'pointer-events-none border-gray-100 text-gray-300'
-            : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+            ? 'pointer-events-none border-border3 text-tx4'
+            : 'border-border text-tx3 hover:bg-surface2'
         }`}
       >
         ‹
@@ -39,7 +37,7 @@ export function Pagination({ page, totalPages, buildHref }: PaginationProps) {
 
       {items.map((item, i) =>
         item === 'ellipsis' ? (
-          <span key={`ellipsis-${i}`} className="flex h-9 w-9 items-center justify-center text-sm text-gray-400">
+          <span key={`ellipsis-${i}`} className="flex h-9 w-9 items-center justify-center text-sm text-tx4">
             …
           </span>
         ) : (
@@ -48,8 +46,8 @@ export function Pagination({ page, totalPages, buildHref }: PaginationProps) {
             href={buildHref(item)}
             className={`flex h-9 w-9 items-center justify-center rounded-lg border text-sm font-medium transition-colors ${
               item === page
-                ? 'border-saffron-500 bg-saffron-50 text-saffron-700'
-                : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+                ? 'border-saffron-500 bg-saffron-50 text-saffron-700 dark:bg-saffron-950 dark:text-saffron-300'
+                : 'border-border text-tx3 hover:bg-surface2'
             }`}
           >
             {item}
@@ -62,8 +60,8 @@ export function Pagination({ page, totalPages, buildHref }: PaginationProps) {
         aria-disabled={page === totalPages}
         className={`flex h-9 w-9 items-center justify-center rounded-lg border text-sm font-medium transition-colors ${
           page === totalPages
-            ? 'pointer-events-none border-gray-100 text-gray-300'
-            : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+            ? 'pointer-events-none border-border3 text-tx4'
+            : 'border-border text-tx3 hover:bg-surface2'
         }`}
       >
         ›

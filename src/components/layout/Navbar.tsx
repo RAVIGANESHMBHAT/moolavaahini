@@ -5,6 +5,7 @@ import { UserMenu } from '@/components/auth/UserMenu'
 import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton'
 import { LocaleSwitcher } from './LocaleSwitcher'
 import { WriteButton } from './WriteButton'
+import { ThemeToggle } from './ThemeToggle'
 
 export async function Navbar() {
   const user = await getSession()
@@ -21,24 +22,24 @@ export async function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <header className="sticky top-0 z-40 border-b border-border bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-saffron-600 text-white">
             <span className="text-sm font-bold">ಮ</span>
           </div>
-          <span className="hidden font-semibold text-gray-900 sm:block">Moolavaahini</span>
+          <span className="hidden font-semibold text-tx sm:block">Moolavaahini</span>
         </Link>
 
         {/* Right side */}
         <div className="flex items-center gap-2">
-          {/* Language toggle */}
+          <ThemeToggle />
           <LocaleSwitcher />
 
           <Link
             href="/search"
-            className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+            className="rounded-lg p-2 text-tx3 hover:bg-surface2 hover:text-tx2"
             aria-label="Search"
           >
             <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

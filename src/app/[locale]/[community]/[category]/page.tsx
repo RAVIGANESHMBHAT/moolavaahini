@@ -35,23 +35,17 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 
   const supabase = await createClient()
 
-  const [{ data: communityData }, { data: categoryData }, { data: categories }] =
-    await Promise.all([
-      supabase.from('communities').select('id, name').eq('slug', community).single(),
-      supabase.from('categories').select('id, name, slug').eq('slug', category).single(),
-      supabase.from('categories').select('name, slug').order('name'),
-    ])
+  const [{ data: communityData }, { data: categoryData }, { data: categories }] = await Promise.all([
+    supabase.from('communities').select('id, name').eq('slug', community).single(),
+    supabase.from('categories').select('id, name, slug').eq('slug', category).single(),
+    supabase.from('categories').select('name, slug').order('name'),
+  ])
 
   if (!communityData || !categoryData) notFound()
 
   const { data: posts, count } = await supabase
     .from('posts')
-    .select(`
-      *,
-      community:communities!posts_community_id_fkey(id, name, slug),
-      category:categories!posts_category_id_fkey(id, name, slug),
-      author:profiles!posts_author_id_fkey(id, display_name, avatar_url)
-    `, { count: 'exact' })
+    .select(`*, community:communities!posts_community_id_fkey(id, name, slug), category:categories!posts_category_id_fkey(id, name, slug), author:profiles!posts_author_id_fkey(id, display_name, avatar_url)`, { count: 'exact' })
     .eq('status', 'approved')
     .eq('community_id', communityData.id)
     .eq('category_id', categoryData.id)
@@ -60,18 +54,14 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 
   const typedPosts = (posts ?? []) as unknown as PostWithDetails[]
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE)
-
-  const buildHref = (p: number) =>
-    p === 1
-      ? `/${community}/${category}`
-      : `/${community}/${category}?page=${p}`
+  const buildHref = (p: number) => p === 1 ? `/${community}/${category}` : `/${community}/${category}?page=${p}`
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <div className="mb-8">
-        <p className="mb-1 text-sm text-gray-500">{communityData.name}</p>
-        <h1 className="text-3xl font-bold text-gray-900">{categoryData.name}</h1>
-        <p className="mt-2 text-gray-500">{count ?? 0} piece{(count ?? 0) !== 1 ? 's' : ''} of content</p>
+        <p className="mb-1 text-sm text-tx3">{communityData.name}</p>
+        <h1 className="text-3xl font-bold text-tx">{categoryData.name}</h1>
+        <p className="mt-2 text-tx3">{count ?? 0} piece{(count ?? 0) !== 1 ? 's' : ''} of content</p>
       </div>
 
       <div className="md:flex md:gap-8">
@@ -84,10 +74,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
             </>
           ) : (
             <>
-              <PostList
-                posts={typedPosts}
-                emptyMessage={`No ${categoryData.name} content from ${communityData.name} yet.`}
-              />
+              <PostList posts={typedPosts} emptyMessage={`No ${categoryData.name} content from ${communityData.name} yet.`} />
               <Pagination page={page} totalPages={totalPages} buildHref={buildHref} />
             </>
           )}
