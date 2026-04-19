@@ -1,10 +1,10 @@
 import { notFound } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
-import { getSession } from '@/lib/auth'
 import { PostList } from '@/components/posts/PostList'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Pagination } from '@/components/ui/Pagination'
-import { Link } from '@/i18n/navigation'
+import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import type { PostWithDetails } from '@/types'
 
 const PAGE_SIZE = 20
@@ -29,12 +29,15 @@ export default async function CommunityPage({ params, searchParams }: PageProps)
   const from = (page - 1) * PAGE_SIZE
   const to = from + PAGE_SIZE - 1
 
-  const supabase = await createClient()
+  const [supabase, tNav, tCommunity] = await Promise.all([
+    createClient(),
+    getTranslations('nav'),
+    getTranslations('community'),
+  ])
 
-  const [{ data: communityData }, { data: categories }, user] = await Promise.all([
+  const [{ data: communityData }, { data: categories }] = await Promise.all([
     supabase.from('communities').select('id, name').eq('slug', community).single(),
     supabase.from('categories').select('name, slug').order('name'),
-    getSession(),
   ])
 
   if (!communityData) notFound()
@@ -53,22 +56,19 @@ export default async function CommunityPage({ params, searchParams }: PageProps)
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-      <div className="mb-8 flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-tx">{communityData.name}</h1>
-          <p className="mt-2 text-tx3">{count ?? 0} piece{(count ?? 0) !== 1 ? 's' : ''} of content</p>
-        </div>
-        {user && (
-          <Link href={`/posts/new?community=${community}`} className="rounded-xl bg-saffron-600 px-4 py-2 text-sm font-semibold text-white hover:bg-saffron-700">
-            Write in {communityData.name}
-          </Link>
-        )}
+      <Breadcrumb items={[
+        { label: tNav('home'), href: '/' },
+        { label: communityData.name },
+      ]} />
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-tx">{communityData.name}</h1>
+        <p className="mt-2 text-tx3">{tCommunity('piecesOfContent', { count: count ?? 0 })}</p>
       </div>
 
       <div className="md:flex md:gap-8">
         <Sidebar community={community} categories={categories ?? []} />
         <div className="flex-1">
-          <PostList posts={typedPosts} emptyMessage={`No content from ${communityData.name} yet.`} />
+          <PostList posts={typedPosts} emptyMessage={tCommunity('noContent', { name: communityData.name })} />
           <Pagination page={page} totalPages={totalPages} buildHref={buildHref} />
         </div>
       </div>

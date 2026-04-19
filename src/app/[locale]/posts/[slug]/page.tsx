@@ -6,6 +6,7 @@ import { PostDetail } from '@/components/posts/PostDetail'
 import { ReviewActions } from '@/components/admin/ReviewActions'
 import { PostStatusBadge } from '@/components/posts/PostStatusBadge'
 import { Link } from '@/i18n/navigation'
+import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import { DiffView } from '@/components/ui/DiffView'
 import type { PostWithDetails } from '@/types'
 
@@ -54,16 +55,15 @@ export default async function PostPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-      {/* Back link + Edit button */}
-      <div className="mb-8 flex items-center justify-between">
-        <Link href={`/${typedPost.community.slug}`} className="inline-flex items-center gap-1.5 text-sm text-tx3 hover:text-tx2">
-          <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M17 10a.75.75 0 01-.75.75H5.612l4.158 3.96a.75.75 0 11-1.04 1.08l-5.5-5.25a.75.75 0 010-1.08l5.5-5.25a.75.75 0 111.04 1.08L5.612 9.25H16.25A.75.75 0 0117 10z" clipRule="evenodd" />
-          </svg>
-          {typedPost.community.name}
-        </Link>
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <Breadcrumb items={[
+          { label: 'Home', href: '/' },
+          { label: typedPost.community.name, href: `/${typedPost.community.slug}` },
+          { label: typedPost.category.name, href: `/${typedPost.community.slug}/${typedPost.category.slug}` },
+          { label: typedPost.title },
+        ]} />
         {canEdit && (
-          <Link href={`/dashboard/edit/${typedPost.id}`} className="rounded-lg border border-border2 px-3 py-1.5 text-xs font-medium text-tx2 hover:bg-surface2">
+          <Link href={`/dashboard/edit/${typedPost.id}`} className="shrink-0 rounded-lg border border-border2 px-3 py-1.5 text-xs font-medium text-tx2 hover:bg-surface2">
             Edit
           </Link>
         )}

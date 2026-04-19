@@ -8,7 +8,11 @@
     "signIn": "Sign in",
     "myPosts": "My Posts",
     "admin": "Admin Panel",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode",
+    "language": "Language",
+    "home": "Home"
   },
   "home": {
     "tagline": "Preserving and sharing the living wisdom of our communities — through stories, proverbs, recipes, and rituals.",
@@ -19,7 +23,8 @@
     "generalKannadaDesc": "Broader Kannada culture, proverbs, and heritage",
     "exploreByCategory": "Explore by Category",
     "recentContributions": "Recent Contributions",
-    "noContent": "No content published yet. Be the first to contribute!"
+    "noContent": "No content published yet. Be the first to contribute!",
+    "viewAll": "View all →"
   },
   "post": {
     "backTo": "Back to {community}",
@@ -42,6 +47,10 @@
     "all": "All",
     "categories": "Categories"
   },
+  "community": {
+    "piecesOfContent": "{count, plural, one {# piece of content} other {# pieces of content}}",
+    "noContent": "No content from {name} yet."
+  },
   "status": {
     "draft": "Draft",
     "pending_review": "Pending Review",
@@ -54,19 +63,67 @@
     "empty": "You haven't written anything yet.",
     "startWriting": "Start Writing",
     "submit": "Submit",
+    "submitting": "Submitting…",
     "edit": "Edit",
-    "feedback": "Feedback:"
+    "feedback": "Feedback:",
+    "editUnderReview": "Edit under review",
+    "unpublishedEdit": "Unpublished edit — not yet submitted for review",
+    "editRejected": "Edit rejected:",
+    "delete": "Delete",
+    "deleting": "Deleting…",
+    "deleteConfirm": "Delete post?",
+    "deleteMessage": "This cannot be undone. The post and all its content will be permanently deleted.",
+    "deleteConfirmLabel": "Yes, delete",
+    "cancel": "Cancel",
+    "dismiss": "Dismiss",
+    "dismissing": "Dismissing…",
+    "revert": "Revert to published version",
+    "reverting": "Reverting…",
+    "revertConfirm": "Revert to published version?",
+    "revertMessage": "Your unpublished edits will be permanently lost. The published version will remain unchanged.",
+    "revertConfirmLabel": "Yes, revert",
+    "keepEditing": "Keep editing"
   },
   "editor": {
     "newPost": "New Post",
     "editPost": "Edit Post",
+    "writeNewPost": "Write New Post",
     "newPostDesc": "Write your contribution. Save as draft or submit for review.",
     "editPostDesc": "Make changes and save or resubmit for review.",
+    "editPostDescApproved": "Your changes will be reviewed before replacing the published version.",
     "titlePlaceholder": "Enter a descriptive title...",
     "applyTemplate": "Apply template",
     "useTemplate": "Use the {category} template?",
     "saveDraft": "Save Draft",
-    "submitReview": "Submit for Review"
+    "saveProgress": "Save Progress",
+    "submitReview": "Submit for Review",
+    "community": "Community",
+    "selectCommunity": "Select community",
+    "communitySelected": "selected",
+    "category": "Category",
+    "selectCategory": "Select category",
+    "title": "Title",
+    "content": "Content",
+    "contentPlaceholder": "Write your contribution...",
+    "selectStep1": "Select a community and category above to start writing.",
+    "savingNote": "Saving will not affect the published version — your edit will be reviewed before going live.",
+    "validateCommunity": "Please select a community",
+    "validateCategory": "Please select a category",
+    "validateRequired": "This field is required",
+    "ogatu": "Ogatu (Riddle)",
+    "ogatuPlaceholder": "Write the riddle here...",
+    "answer": "Answer",
+    "answerPlaceholder": "Write the answer here...",
+    "gaade": "Gaade (Proverb)",
+    "gaadePlaceholder": "Write the proverb here...",
+    "artha": "Artha (Meaning)",
+    "arthaPlaceholder": "Explain the meaning, usage, and cultural context...",
+    "description": "Description",
+    "homeRemedyPlaceholder": "Describe this home remedy...",
+    "recipe": "Recipe",
+    "recipePlaceholder": "## Ingredients\n\n- \n\n## Method\n\n1. \n\n## Notes\n\n",
+    "ritualPlaceholder": "Describe this ritual or tradition...",
+    "plantPlaceholder": "## Plant\n\n\n\n## Medicinal Uses\n\n\n\n## Preparation\n\n"
   },
   "auth": {
     "welcome": "Welcome to Moolavaahini",

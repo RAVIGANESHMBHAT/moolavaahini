@@ -1,7 +1,11 @@
 import { notFound } from 'next/navigation'
 import { requireAuth } from '@/lib/auth'
 import { createClient } from '@/lib/supabase/server'
+import { getTranslations } from 'next-intl/server'
 import { PostForm } from '@/components/editor/PostForm'
+import { DeleteButton } from '@/components/dashboard/DeleteButton'
+import { Link } from '@/i18n/navigation'
+import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import type { Post } from '@/types'
 
 interface PageProps {
@@ -14,6 +18,8 @@ export default async function EditPostPage({ params }: PageProps) {
   const { id } = await params
   const user = await requireAuth()
   const supabase = await createClient()
+  const t = await getTranslations('editor')
+  const tDash = await getTranslations('dashboard')
 
   const { data: post } = await supabase
     .from('posts')
@@ -47,12 +53,21 @@ export default async function EditPostPage({ params }: PageProps) {
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Edit Post</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          {typedPost.status === 'approved'
-            ? 'Your changes will be reviewed before replacing the published version.'
-            : 'Make changes and save or resubmit for review.'}
-        </p>
+        <Breadcrumb items={[
+          { label: tDash('title'), href: '/dashboard' },
+          { label: t('editPost') },
+        ]} />
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-tx">{t('editPost')}</h1>
+            <p className="mt-1 text-sm text-tx3">
+              {typedPost.status === 'approved'
+                ? t('editPostDescApproved')
+                : t('editPostDesc')}
+            </p>
+          </div>
+          <DeleteButton postId={typedPost.id} />
+        </div>
       </div>
       <PostForm
         communities={communities ?? []}

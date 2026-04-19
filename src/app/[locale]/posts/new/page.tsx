@@ -1,6 +1,8 @@
 import { requireAuth } from '@/lib/auth'
 import { createClient } from '@/lib/supabase/server'
 import { PostForm } from '@/components/editor/PostForm'
+import { Breadcrumb } from '@/components/ui/Breadcrumb'
+import { getTranslations } from 'next-intl/server'
 
 export const metadata = { title: 'Write' }
 
@@ -13,6 +15,8 @@ export default async function NewPostPage({ searchParams }: PageProps) {
 
   const { community: communitySlug } = await searchParams
   const supabase = await createClient()
+  const t = await getTranslations('editor')
+  const tNav = await getTranslations('nav')
 
   const [{ data: communities }, { data: categories }] = await Promise.all([
     supabase.from('communities').select('*').order('name'),
@@ -25,11 +29,13 @@ export default async function NewPostPage({ searchParams }: PageProps) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+      <Breadcrumb items={[
+        { label: tNav('home'), href: '/' },
+        { label: t('writeNewPost') },
+      ]} />
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">New Post</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Write your contribution. Save as draft or submit for review.
-        </p>
+        <h1 className="text-2xl font-bold text-tx">{t('newPost')}</h1>
+        <p className="mt-1 text-sm text-tx3">{t('newPostDesc')}</p>
       </div>
       <PostForm
         communities={communities ?? []}

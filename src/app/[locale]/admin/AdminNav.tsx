@@ -1,6 +1,7 @@
 'use client'
 
-import { Link, usePathname } from '@/i18n/navigation'
+import { useState } from 'react'
+import { usePathname, useRouter } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 
 interface AdminNavProps {
@@ -10,16 +11,27 @@ interface AdminNavProps {
 
 export function AdminNav({ items, mobile = false }: AdminNavProps) {
   const pathname = usePathname()
+  const router = useRouter()
+  const [pendingHref, setPendingHref] = useState<string | null>(null)
+
+  const handleClick = (href: string) => {
+    if (pathname === href) return
+    setPendingHref(href)
+    router.push(href)
+  }
+
+  // Clear pending once the real route matches
+  const resolvedPending = pendingHref && pathname === pendingHref ? null : pendingHref
 
   if (mobile) {
     return (
       <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
         {items.map((item) => {
-          const isActive = pathname === item.href
+          const isActive = pathname === item.href || resolvedPending === item.href
           return (
-            <Link
+            <button
               key={item.href}
-              href={item.href}
+              onClick={() => handleClick(item.href)}
               className={cn(
                 'shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors',
                 isActive
@@ -28,7 +40,7 @@ export function AdminNav({ items, mobile = false }: AdminNavProps) {
               )}
             >
               {item.label}
-            </Link>
+            </button>
           )
         })}
       </div>
@@ -38,20 +50,20 @@ export function AdminNav({ items, mobile = false }: AdminNavProps) {
   return (
     <nav className="flex flex-col gap-0.5">
       {items.map((item) => {
-        const isActive = pathname === item.href
+        const isActive = pathname === item.href || resolvedPending === item.href
         return (
-          <Link
+          <button
             key={item.href}
-            href={item.href}
+            onClick={() => handleClick(item.href)}
             className={cn(
-              'rounded-lg border-l-2 px-3 py-2 text-sm font-medium transition-colors',
+              'w-full rounded-lg border-l-2 px-3 py-2 text-left text-sm font-medium transition-colors',
               isActive
                 ? 'border-saffron-500 bg-saffron-50 text-saffron-700 dark:bg-saffron-950 dark:text-saffron-300'
                 : 'border-transparent text-tx3 hover:bg-surface2 hover:text-tx'
             )}
           >
             {item.label}
-          </Link>
+          </button>
         )
       })}
     </nav>

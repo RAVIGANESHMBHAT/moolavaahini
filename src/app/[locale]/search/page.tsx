@@ -10,10 +10,10 @@ export const metadata = { title: 'Search' }
 const PAGE_SIZE = 20
 
 interface PageProps {
-  searchParams: Promise<{ q?: string; category?: string; page?: string }>
+  searchParams: Promise<{ q?: string; category?: string; community?: string; page?: string }>
 }
 
-async function SearchResults({ query, category, page }: { query: string; category?: string; page: number }) {
+async function SearchResults({ query, category, community, page }: { query: string; category?: string; community?: string; page: number }) {
   const supabase = await createClient()
   const from = (page - 1) * PAGE_SIZE
   const to = from + PAGE_SIZE - 1
@@ -32,6 +32,11 @@ async function SearchResults({ query, category, page }: { query: string; categor
     if (cat) queryBuilder = queryBuilder.eq('category_id', cat.id)
   }
 
+  if (community) {
+    const { data: comm } = await supabase.from('communities').select('id').eq('slug', community).single()
+    if (comm) queryBuilder = queryBuilder.eq('community_id', comm.id)
+  }
+
   const { data: posts, count } = await queryBuilder.order('published_at', { ascending: false }).range(from, to)
   const typedPosts = (posts ?? []) as unknown as PostWithDetails[]
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE)
@@ -40,6 +45,7 @@ async function SearchResults({ query, category, page }: { query: string; categor
     const params = new URLSearchParams()
     if (query) params.set('q', query)
     if (category) params.set('category', category)
+    if (community) params.set('community', community)
     if (p > 1) params.set('page', String(p))
     const qs = params.toString()
     return `/search${qs ? `?${qs}` : ''}`
@@ -58,7 +64,7 @@ async function SearchResults({ query, category, page }: { query: string; categor
 }
 
 export default async function SearchPage({ searchParams }: PageProps) {
-  const { q = '', category, page: pageParam } = await searchParams
+  const { q = '', category, community, page: pageParam } = await searchParams
   const page = Math.max(1, parseInt(pageParam ?? '1', 10) || 1)
 
   return (
@@ -66,7 +72,7 @@ export default async function SearchPage({ searchParams }: PageProps) {
       <h1 className="mb-6 text-2xl font-bold text-tx">Search</h1>
       <SearchBar className="mb-8 max-w-xl" />
       <Suspense fallback={<p className="text-sm text-tx3">Searching…</p>}>
-        <SearchResults query={q} category={category} page={page} />
+        <SearchResults query={q} category={category} community={community} page={page} />
       </Suspense>
     </div>
   )

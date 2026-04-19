@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import { requireAuth } from '@/lib/auth'
 import { createClient } from '@/lib/supabase/server'
+import { getTranslations } from 'next-intl/server'
 import { PostStatusBadge } from '@/components/posts/PostStatusBadge'
+import { PostActionsMenu } from '@/components/dashboard/PostActionsMenu'
 import { DeleteButton } from '@/components/dashboard/DeleteButton'
 import { SubmitButton } from '@/components/dashboard/SubmitButton'
 import { DismissRejectionButton } from '@/components/dashboard/DismissRejectionButton'
@@ -13,6 +15,7 @@ export const metadata = { title: 'My Posts' }
 export default async function DashboardPage() {
   const user = await requireAuth()
   const supabase = await createClient()
+  const t = await getTranslations('dashboard')
 
   const { data: posts } = await supabase
     .from('posts')
@@ -31,18 +34,15 @@ export default async function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-tx">My Posts</h1>
-        <Link href="/posts/new" className="rounded-lg bg-saffron-600 px-4 py-2 text-sm font-medium text-white hover:bg-saffron-700">
-          Write New
-        </Link>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-tx">{t('title')}</h1>
       </div>
 
       {typedPosts.length === 0 ? (
         <div className="rounded-xl border border-dashed border-border2 bg-surface2 py-20 text-center">
-          <p className="mb-4 text-sm text-tx3">You haven't written anything yet.</p>
+          <p className="mb-4 text-sm text-tx3">{t('empty')}</p>
           <Link href="/posts/new" className="rounded-lg bg-saffron-600 px-4 py-2 text-sm font-medium text-white hover:bg-saffron-700">
-            Start Writing
+            {t('startWriting')}
           </Link>
         </div>
       ) : (
@@ -66,30 +66,30 @@ export default async function DashboardPage() {
                           {post.community.name} · {post.category.name} · {formatDate(post.created_at)}
                         </p>
                         {post.status === 'rejected' && post.rejection_reason && (
-                          <p className="mt-1 text-xs text-red-500">Feedback: {post.rejection_reason}</p>
+                          <p className="mt-1 text-xs text-red-500">{t('feedback')} {post.rejection_reason}</p>
                         )}
                         {post.status === 'approved' && post.pending_submitted_at && (
-                          <p className="mt-1 text-xs text-blue-500 dark:text-blue-400">Edit under review</p>
+                          <p className="mt-1 text-xs text-blue-500 dark:text-blue-400">{t('editUnderReview')}</p>
                         )}
                         {post.status === 'approved' && post.pending_title && !post.pending_submitted_at && (
-                          <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">Unpublished edit — not yet submitted for review</p>
+                          <p className="mt-1 text-xs text-amber-600 dark:text-amber-400">{t('unpublishedEdit')}</p>
                         )}
                         {post.status === 'approved' && post.rejection_reason && !post.pending_title && (
                           <p className="mt-1 text-xs text-red-500">
-                            Edit rejected: {post.rejection_reason}
+                            {t('editRejected')} {post.rejection_reason}
                             <DismissRejectionButton postId={post.id} />
                           </p>
                         )}
                       </div>
-                      <div className="flex shrink-0 items-center gap-2">
+                      <PostActionsMenu>
                         {['draft', 'rejected', 'approved', 'pending_review'].includes(post.status) && (
                           <Link href={`/dashboard/edit/${post.id}`} className="rounded-lg border border-border2 px-3 py-1.5 text-xs font-medium text-tx2 hover:bg-surface2">
-                            Edit
+                            {t('edit')}
                           </Link>
                         )}
                         {['draft', 'rejected'].includes(post.status) && <SubmitButton postId={post.id} />}
                         <DeleteButton postId={post.id} />
-                      </div>
+                      </PostActionsMenu>
                     </div>
                   ))}
                 </div>

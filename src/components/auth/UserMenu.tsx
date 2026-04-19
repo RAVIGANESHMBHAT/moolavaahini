@@ -63,7 +63,7 @@ export function UserMenu({ profile }: UserMenuProps) {
             <p className="text-xs capitalize text-tx3">{profile.role}</p>
           </div>
 
-          <div className="py-1">
+          <div className="">
             <div className="relative">
               <button
                 onClick={() => setCommunityOpen((v) => !v)}
@@ -106,9 +106,6 @@ export function UserMenu({ profile }: UserMenuProps) {
             <Link href="/dashboard" className="block px-4 py-2 text-sm text-tx2 hover:bg-surface2" onClick={() => setOpen(false)}>
               {t('myPosts')}
             </Link>
-            <Link href="/posts/new" className="block px-4 py-2 text-sm text-tx2 hover:bg-surface2" onClick={() => setOpen(false)}>
-              {t('write')}
-            </Link>
             {profile.role === 'admin' && (
               <Link href="/admin" className="block px-4 py-2 text-sm text-tx2 hover:bg-surface2" onClick={() => setOpen(false)}>
                 {t('admin')}
@@ -116,7 +113,7 @@ export function UserMenu({ profile }: UserMenuProps) {
             )}
           </div>
 
-          <div className="border-t border-border3 py-1">
+          <div className="border-t border-border3">
             <form action={signOut}>
               <button type="submit" className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40">
                 {t('signOut')}

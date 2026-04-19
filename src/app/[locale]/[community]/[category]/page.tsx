@@ -4,6 +4,7 @@ import { PostList } from '@/components/posts/PostList'
 import { OgatuTable } from '@/components/posts/OgatuTable'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Pagination } from '@/components/ui/Pagination'
+import { Breadcrumb } from '@/components/ui/Breadcrumb'
 import type { PostWithDetails } from '@/types'
 
 const PAGE_SIZE = 20
@@ -58,8 +59,12 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+      <Breadcrumb items={[
+        { label: 'Home', href: '/' },
+        { label: communityData.name, href: `/${community}` },
+        { label: categoryData.name },
+      ]} />
       <div className="mb-8">
-        <p className="mb-1 text-sm text-tx3">{communityData.name}</p>
         <h1 className="text-3xl font-bold text-tx">{categoryData.name}</h1>
         <p className="mt-2 text-tx3">{count ?? 0} piece{(count ?? 0) !== 1 ? 's' : ''} of content</p>
       </div>

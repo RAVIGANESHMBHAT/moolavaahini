@@ -8,6 +8,7 @@ import '../globals.css'
 import { ThemeProvider } from '@/lib/theme'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
+import { FloatingWriteButton } from '@/components/layout/FloatingWriteButton'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -45,12 +46,16 @@ export default async function LocaleLayout({
   const messages = await getMessages()
 
   return (
-    <html lang={locale} className={`${inter.variable} ${notoSansKannada.variable}`}>
+    <html lang={locale} className={`${inter.variable} ${notoSansKannada.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('theme');var d=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(t===null&&d))document.documentElement.classList.add('dark')}catch(e){}})()` }} />
+      </head>
       <body className="flex min-h-screen flex-col font-sans">
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
             <Navbar />
             <main className="flex-1">{children}</main>
+            <FloatingWriteButton />
             <Footer />
           </NextIntlClientProvider>
         </ThemeProvider>

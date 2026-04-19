@@ -2,11 +2,13 @@
 
 import { useState, useTransition } from 'react'
 import { useRouter } from '@/i18n/navigation'
+import { useTranslations } from 'next-intl'
 import { discardPendingEdit } from '@/actions/post.actions'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 
 export function DiscardEditButton({ postId }: { postId: string }) {
   const router = useRouter()
+  const t = useTranslations('dashboard')
   const [isPending, startTransition] = useTransition()
   const [open, setOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -30,17 +32,17 @@ export function DiscardEditButton({ postId }: { postId: string }) {
         disabled={isPending}
         className="w-full rounded-lg border border-red-300 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50 dark:border-red-800 dark:hover:bg-red-950/40 sm:w-auto"
       >
-        {isPending ? 'Reverting…' : 'Revert to published version'}
+        {isPending ? t('reverting') : t('revert')}
       </button>
       {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
       <ConfirmDialog
         open={open}
         onClose={() => setOpen(false)}
         onConfirm={handleConfirm}
-        title="Revert to published version?"
-        message="Your unpublished edits will be permanently lost. The published version will remain unchanged."
-        confirmLabel="Yes, revert"
-        cancelLabel="Keep editing"
+        title={t('revertConfirm')}
+        message={t('revertMessage')}
+        confirmLabel={t('revertConfirmLabel')}
+        cancelLabel={t('keepEditing')}
         loading={isPending}
       />
     </div>

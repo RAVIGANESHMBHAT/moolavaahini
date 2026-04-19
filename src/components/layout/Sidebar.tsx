@@ -2,6 +2,7 @@
 
 import { Link } from "@/i18n/navigation";
 import { usePathname } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import type { Category } from "@/types";
 
@@ -12,9 +13,10 @@ interface SidebarProps {
 
 export function Sidebar({ community, categories }: SidebarProps) {
   const pathname = usePathname();
+  const t = useTranslations("category");
   const base = community ? `/${community}` : "";
 
-  const allItems = [{ name: "All", slug: "" }, ...categories];
+  const allItems = [{ name: t("all"), slug: "" }, ...categories];
 
   return (
     <>
@@ -46,7 +48,7 @@ export function Sidebar({ community, categories }: SidebarProps) {
       {/* Desktop: vertical sidebar */}
       <aside className="hidden w-48 shrink-0 md:block">
         <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-tx4">
-          Categories
+          {t("categories")}
         </p>
         <nav className="flex flex-col gap-0.5">
           {allItems.map((cat) => {

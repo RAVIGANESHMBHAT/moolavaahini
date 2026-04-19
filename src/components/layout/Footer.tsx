@@ -12,7 +12,7 @@ export function Footer() {
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-saffron-600 text-white">
               <span className="text-xs font-bold">ಮ</span>
             </div>
-            <span className="text-sm font-semibold text-tx">Moolavaahini</span>
+            <span className="text-sm font-semibold text-tx">MoolaVaahini</span>
           </div>
           <p className="text-sm text-tx3">{t('tagline')}</p>
           <div className="flex gap-4">

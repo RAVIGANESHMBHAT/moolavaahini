@@ -1,15 +1,12 @@
 import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { PostList } from '@/components/posts/PostList'
 import type { PostWithDetails } from '@/types'
 
-const communities = [
-  { name: 'Havyaka', slug: 'havyaka', description: 'Traditions, rituals, and wisdom from the Havyaka community' },
-  { name: 'General Kannada', slug: 'general-kannada', description: 'Broader Kannada culture, proverbs, and heritage' },
-]
-
 export default async function HomePage() {
   const supabase = await createClient()
+  const t = await getTranslations('home')
 
   const [{ data: categories }, { data: posts }] = await Promise.all([
     supabase.from('categories').select('id, name, slug, icon').order('name'),
@@ -23,28 +20,30 @@ export default async function HomePage() {
 
   const typedPosts = (posts ?? []) as unknown as PostWithDetails[]
 
+  const communities = [
+    { name: 'Havyaka', slug: 'havyaka', description: t('havyakaDesc') },
+    { name: 'General Kannada', slug: 'general-kannada', description: t('generalKannadaDesc') },
+  ]
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       {/* Hero */}
       <section className="mb-16 text-center">
         <h1 className="mb-4 text-4xl font-bold text-tx sm:text-5xl">ಮೂಲವಾಹಿನಿ</h1>
-        <p className="mx-auto max-w-2xl text-lg text-tx3">
-          Preserving and sharing the living wisdom of our communities —
-          through stories, proverbs, recipes, and rituals.
-        </p>
+        <p className="mx-auto max-w-2xl text-lg text-tx3">{t('tagline')}</p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/posts/new" className="rounded-xl bg-saffron-600 px-6 py-3 text-sm font-semibold text-white hover:bg-saffron-700">
-            Contribute
+            {t('contribute')}
           </Link>
           <Link href="/search" className="rounded-xl border border-border2 bg-surface px-6 py-3 text-sm font-semibold text-tx2 hover:bg-surface2">
-            Browse All
+            {t('browseAll')}
           </Link>
         </div>
       </section>
 
       {/* Communities */}
       <section className="mb-16">
-        <h2 className="mb-6 text-xl font-semibold text-tx">Communities</h2>
+        <h2 className="mb-6 text-xl font-semibold text-tx">{t('communities')}</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           {communities.map((c) => (
             <Link key={c.slug} href={`/${c.slug}`} className="group rounded-xl border border-border bg-surface p-6 transition-shadow hover:shadow-md">
@@ -57,7 +56,7 @@ export default async function HomePage() {
 
       {/* Categories */}
       <section className="mb-16">
-        <h2 className="mb-6 text-xl font-semibold text-tx">Explore by Category</h2>
+        <h2 className="mb-6 text-xl font-semibold text-tx">{t('exploreByCategory')}</h2>
         <div className="flex flex-wrap gap-3">
           {(categories ?? []).map((cat) => (
             <Link
@@ -75,12 +74,12 @@ export default async function HomePage() {
       {/* Recent posts */}
       <section>
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-tx">Recent Contributions</h2>
+          <h2 className="text-xl font-semibold text-tx">{t('recentContributions')}</h2>
           <Link href="/search" className="text-sm font-medium text-saffron-600 hover:underline dark:text-saffron-400">
-            View all →
+            {t('viewAll')}
           </Link>
         </div>
-        <PostList posts={typedPosts} emptyMessage="No content published yet. Be the first to contribute!" />
+        <PostList posts={typedPosts} emptyMessage={t('noContent')} />
       </section>
     </div>
   )
