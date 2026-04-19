@@ -103,6 +103,8 @@ export async function updatePost(
   if (title.length > 200) return { success: false, error: 'Title must be 200 characters or fewer' }
   if (body.length > 50000) return { success: false, error: 'Content must be 50,000 characters or fewer' }
 
+  let updateSlug: string
+
   if (existing.status === 'approved') {
     // Save to pending columns only — live content and status stay unchanged
     const { data, error } = await supabase
