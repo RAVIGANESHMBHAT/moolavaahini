@@ -23,8 +23,8 @@ const notoSansKannada = Noto_Sans_Kannada({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Moolavaahini – Cultural Knowledge Archive',
-    template: '%s | Moolavaahini',
+    default: 'MoolaVaahini - Cultural Knowledge Archive',
+    template: '%s | MoolaVaahini',
   },
   description:
     'Preserving and sharing cultural knowledge from Havyaka and Kannada communities.',

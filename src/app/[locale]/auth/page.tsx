@@ -20,8 +20,9 @@ export default async function AuthPage({
     <div className="flex min-h-[calc(100vh-8rem)] items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-saffron-600 text-white">
-            <span className="text-2xl font-bold">ಮ</span>
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center overflow-hidden rounded-2xl">
+            <img src="/icon.svg" alt="Moolavaahini" width={64} height={64} className="dark:hidden" />
+            <img src="/icon-dark.svg" alt="Moolavaahini" width={64} height={64} className="hidden dark:block" />
           </div>
           <h1 className="text-2xl font-bold text-tx">{t('welcome')}</h1>
           <p className="mt-2 text-sm text-tx3">{t('subtitle')}</p>
