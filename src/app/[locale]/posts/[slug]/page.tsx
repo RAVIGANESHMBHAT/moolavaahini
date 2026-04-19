@@ -4,6 +4,7 @@ import { getSession } from '@/lib/auth'
 import { getUserRole } from '@/lib/roles'
 import { PostDetail } from '@/components/posts/PostDetail'
 import { ReviewActions } from '@/components/admin/ReviewActions'
+import { DeleteButton } from '@/components/dashboard/DeleteButton'
 import { PostStatusBadge } from '@/components/posts/PostStatusBadge'
 import { Link } from '@/i18n/navigation'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
@@ -55,17 +56,22 @@ export default async function PostPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-      <div className="mb-6 flex items-center justify-between gap-4">
+      <div className="mb-6 space-y-3">
         <Breadcrumb items={[
           { label: 'Home', href: '/' },
           { label: typedPost.community.name, href: `/${typedPost.community.slug}` },
           { label: typedPost.category.name, href: `/${typedPost.community.slug}/${typedPost.category.slug}` },
           { label: typedPost.title },
         ]} />
-        {canEdit && (
-          <Link href={`/dashboard/edit/${typedPost.id}`} className="shrink-0 rounded-lg border border-border2 px-3 py-1.5 text-xs font-medium text-tx2 hover:bg-surface2">
-            Edit
-          </Link>
+        {(canEdit || (isReviewer && user2 && typedPost.author_id !== user2.id)) && (
+          <div className="flex items-center justify-end gap-2">
+            {canEdit && (
+              <Link href={`/dashboard/edit/${typedPost.id}`} className="inline-flex items-center justify-center rounded-lg border border-border2 px-3 py-1.5 text-xs font-medium text-tx2 hover:bg-surface2">
+                Edit
+              </Link>
+            )}
+            <DeleteButton postId={typedPost.id} />
+          </div>
         )}
       </div>
 

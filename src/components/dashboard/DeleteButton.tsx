@@ -15,7 +15,7 @@ export function DeleteButton({ postId }: { postId: string }) {
   }
 
   return (
-    <div>
+    <>
       <button
         onClick={() => setOpen(true)}
         disabled={isPending}
@@ -33,6 +33,6 @@ export function DeleteButton({ postId }: { postId: string }) {
         cancelLabel={t('cancel')}
         loading={isPending}
       />
-    </div>
+    </>
   )
 }

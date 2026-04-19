@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect, useTransition } from 'react'
+import { useTranslations } from 'next-intl'
 import { updateUserRole } from '@/actions/profile.actions'
 import { cn } from '@/lib/utils'
 import type { UserRole } from '@/types'
@@ -12,6 +13,7 @@ export function RoleSelector({ userId, currentRole, isSelf }: { userId: string; 
   const [value, setValue] = useState(currentRole)
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+  const t = useTranslations('admin')
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -34,7 +36,7 @@ export function RoleSelector({ userId, currentRole, isSelf }: { userId: string; 
   if (isSelf) {
     return (
       <span className="inline-block rounded-full bg-surface2 px-2.5 py-0.5 text-xs font-medium capitalize text-tx3">
-        {currentRole} (you)
+        {currentRole} {t('youSuffix')}
       </span>
     )
   }

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { getTranslations } from 'next-intl/server'
 import { PostStatusBadge } from '@/components/posts/PostStatusBadge'
 import { formatDate } from '@/lib/utils'
 import { Badge } from '@/components/ui/Badge'
@@ -7,6 +8,7 @@ import type { PostWithDetails } from '@/types'
 
 export async function ReviewQueue() {
   const supabase = await createClient()
+  const t = await getTranslations('admin')
 
   const [{ data: newPosts }, { data: editPosts }] = await Promise.all([
     supabase
@@ -29,7 +31,7 @@ export async function ReviewQueue() {
   if (isEmpty) {
     return (
       <div className="rounded-xl border border-dashed border-border2 bg-surface2 py-16 text-center">
-        <p className="text-sm text-tx3">No posts pending review.</p>
+        <p className="text-sm text-tx3">{t('noPending')}</p>
       </div>
     )
   }
@@ -39,24 +41,24 @@ export async function ReviewQueue() {
       {typedNewPosts.length > 0 && (
         <section>
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-tx3">
-            New Posts ({typedNewPosts.length})
+            {t('newPosts', { count: typedNewPosts.length })}
           </h2>
-          <PostList posts={typedNewPosts} />
+          <PostList posts={typedNewPosts} editBadgeLabel={t('editBadge')} anonymousLabel={t('anonymous')} />
         </section>
       )}
       {typedEditPosts.length > 0 && (
         <section>
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-tx3">
-            Edit Reviews ({typedEditPosts.length})
+            {t('editReviews', { count: typedEditPosts.length })}
           </h2>
-          <PostList posts={typedEditPosts} isEdit />
+          <PostList posts={typedEditPosts} isEdit editBadgeLabel={t('editBadge')} anonymousLabel={t('anonymous')} />
         </section>
       )}
     </div>
   )
 }
 
-function PostList({ posts, isEdit = false }: { posts: PostWithDetails[]; isEdit?: boolean }) {
+function PostList({ posts, isEdit = false, editBadgeLabel, anonymousLabel }: { posts: PostWithDetails[]; isEdit?: boolean; editBadgeLabel: string; anonymousLabel: string }) {
   return (
     <div className="divide-y divide-border rounded-xl border border-border bg-surface">
       {posts.map((post) => (
@@ -65,13 +67,13 @@ function PostList({ posts, isEdit = false }: { posts: PostWithDetails[]; isEdit?
             <div className="mb-1.5 flex flex-wrap gap-1.5">
               <Badge variant="saffron">{post.community.name}</Badge>
               <Badge variant="blue">{post.category.name}</Badge>
-              {isEdit ? <Badge variant="default">Edit</Badge> : <PostStatusBadge status={post.status} />}
+              {isEdit ? <Badge variant="default">{editBadgeLabel}</Badge> : <PostStatusBadge status={post.status} />}
             </div>
             <Link href={`/posts/${post.slug}`} className="block truncate text-base font-medium text-tx hover:text-saffron-700 dark:hover:text-saffron-400">
               {isEdit ? (post.pending_title ?? post.title) : post.title}
             </Link>
             <p className="mt-0.5 text-xs text-tx3">
-              by {post.author.display_name ?? 'Anonymous'} · {formatDate(post.created_at)}
+              by {post.author.display_name ?? anonymousLabel} · {formatDate(post.created_at)}
             </p>
           </div>
         </div>

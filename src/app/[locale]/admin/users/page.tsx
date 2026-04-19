@@ -2,6 +2,7 @@ import { requireAuth } from '@/lib/auth'
 import { getUserRole } from '@/lib/roles'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 import { RoleSelector } from '@/components/admin/RoleSelector'
 import { formatDate } from '@/lib/utils'
 
@@ -12,7 +13,10 @@ export default async function UsersPage() {
   const role = await getUserRole(user.id)
   if (role !== 'admin') redirect('/admin')
 
-  const supabase = await createClient()
+  const [supabase, t] = await Promise.all([
+    createClient(),
+    getTranslations('admin'),
+  ])
   const { data: profiles } = await supabase
     .from('profiles')
     .select('id, display_name, avatar_url, role, created_at')
@@ -20,14 +24,14 @@ export default async function UsersPage() {
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-tx">Registered Users</h1>
+      <h1 className="mb-6 text-2xl font-bold text-tx">{t('registeredUsers')}</h1>
       <div className="overflow-x-auto rounded-xl border border-border bg-surface">
         <table className="min-w-full divide-y divide-border text-sm">
           <thead className="bg-surface2">
             <tr>
-              <th className="px-5 py-3 text-left font-medium text-tx3">User</th>
-              <th className="px-5 py-3 text-left font-medium text-tx3">Joined</th>
-              <th className="px-5 py-3 text-left font-medium text-tx3">Role</th>
+              <th className="px-5 py-3 text-left font-medium text-tx3">{t('userCol')}</th>
+              <th className="px-5 py-3 text-left font-medium text-tx3">{t('joinedCol')}</th>
+              <th className="px-5 py-3 text-left font-medium text-tx3">{t('roleCol')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border3">
@@ -39,7 +43,7 @@ export default async function UsersPage() {
                       {p.display_name?.slice(0, 2).toUpperCase() ?? '?'}
                     </div>
                     <span className="font-medium text-tx">
-                      {p.display_name ?? <span className="italic text-tx4">No name</span>}
+                      {p.display_name ?? <span className="italic text-tx4">{t('noName')}</span>}
                     </span>
                   </div>
                 </td>

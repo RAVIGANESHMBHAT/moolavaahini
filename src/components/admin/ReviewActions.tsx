@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Textarea";
 import { approvePost, rejectPost } from "@/actions/review.actions";
@@ -13,6 +14,7 @@ interface ReviewActionsProps {
 
 export function ReviewActions({ postId, postUpdatedAt }: ReviewActionsProps) {
   const router = useRouter();
+  const t = useTranslations("admin");
   const [isApproving, startApprove] = useTransition();
   const [isRejecting, startReject] = useTransition();
   const [showRejectForm, setShowRejectForm] = useState(false);
@@ -48,7 +50,7 @@ export function ReviewActions({ postId, postUpdatedAt }: ReviewActionsProps) {
   return (
     <div className="rounded-xl border border-border bg-surface2 p-5">
       <h3 className="mb-3 text-sm font-semibold text-tx2">
-        Review Actions
+        {t("reviewActions")}
       </h3>
 
       {error && (
@@ -60,28 +62,28 @@ export function ReviewActions({ postId, postUpdatedAt }: ReviewActionsProps) {
       {!showRejectForm ? (
         <div className="flex flex-wrap gap-3">
           <Button variant="primary" onClick={handleApprove} loading={isApproving} disabled={isRejecting}>
-            Approve & Publish
+            {t("approve")}
           </Button>
           <Button variant="danger" onClick={() => setShowRejectForm(true)} disabled={isApproving || isRejecting}>
-            Reject
+            {t("reject")}
           </Button>
         </div>
       ) : (
         <div className="space-y-3">
           <Textarea
-            label="Rejection reason"
+            label={t("rejectionReason")}
             value={reason}
             onChange={(e) => setReason(e.target.value)}
-            placeholder="Explain why this post is being rejected..."
+            placeholder={t("rejectionPlaceholder")}
             rows={3}
             required
           />
           <div className="flex gap-3">
             <Button variant="danger" onClick={handleReject} loading={isRejecting} disabled={!reason.trim()}>
-              Confirm Reject
+              {t("confirmReject")}
             </Button>
             <Button variant="ghost" onClick={() => { setShowRejectForm(false); setReason(""); }} disabled={isRejecting}>
-              Cancel
+              {t("cancel")}
             </Button>
           </div>
         </div>

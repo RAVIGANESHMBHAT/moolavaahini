@@ -262,5 +262,10 @@ export async function deletePost(id: string): Promise<{ success: boolean; error?
   if (error) return { success: false, error: error.message }
 
   revalidatePath('/dashboard')
+  revalidatePath('/admin/review')
+  // Admins deleting someone else's post go back to the review queue
+  if (isAdmin && post.author_id !== user.id) {
+    redirect('/admin/review')
+  }
   redirect('/dashboard')
 }

@@ -83,7 +83,7 @@ export default async function DashboardPage() {
                       </div>
                       <PostActionsMenu>
                         {['draft', 'rejected', 'approved', 'pending_review'].includes(post.status) && (
-                          <Link href={`/dashboard/edit/${post.id}`} className="rounded-lg border border-border2 px-3 py-1.5 text-xs font-medium text-tx2 hover:bg-surface2">
+                          <Link href={`/dashboard/edit/${post.id}`} className="inline-flex items-center !justify-center rounded-lg border border-border2 px-3 py-1.5 text-xs font-medium text-tx2 hover:bg-surface2">
                             {t('edit')}
                           </Link>
                         )}

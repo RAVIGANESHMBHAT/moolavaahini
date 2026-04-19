@@ -1,9 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
+import { getTranslations } from 'next-intl/server'
 
 export const metadata = { title: 'Admin Overview' }
 
 export default async function AdminPage() {
   const supabase = await createClient()
+  const t = await getTranslations('admin')
 
   const [
     { count: submittedPosts },
@@ -24,16 +26,16 @@ export default async function AdminPage() {
   const pendingTotal = (newPending ?? 0) + (editPending ?? 0)
 
   const stats = [
-    { label: 'Submitted', value: submittedPosts ?? 0 },
-    { label: 'Pending Review', value: pendingTotal, highlight: pendingTotal > 0 },
-    { label: 'Published', value: approvedPosts ?? 0 },
-    { label: 'Rejected', value: rejectedPosts ?? 0 },
-    { label: 'Registered Users', value: totalProfiles ?? 0 },
+    { label: t('submitted'), value: submittedPosts ?? 0 },
+    { label: t('pendingReview'), value: pendingTotal, highlight: pendingTotal > 0 },
+    { label: t('published'), value: approvedPosts ?? 0 },
+    { label: t('rejected'), value: rejectedPosts ?? 0 },
+    { label: t('registeredUsers'), value: totalProfiles ?? 0 },
   ]
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-tx">Overview</h1>
+      <h1 className="mb-6 text-2xl font-bold text-tx">{t('overview')}</h1>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {stats.map((stat) => (
           <div

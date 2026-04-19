@@ -132,19 +132,33 @@
     "disclaimer": "ಸೈನ್ ಇನ್ ಮಾಡುವ ಮೂಲಕ, ನೀವು ಜ್ಞಾನವನ್ನು ಗೌರವಪೂರ್ವಕವಾಗಿ ಕೊಡುಗೆ ನೀಡಲು ಒಪ್ಪಿಕೊಳ್ಳುತ್ತೀರಿ."
   },
   "admin": {
+    "title": "ನಿರ್ವಾಹಕ",
     "overview": "ಅವಲೋಕನ",
     "reviewQueue": "ಪರಿಶೀಲನಾ ಸಾಲು",
+    "users": "ಬಳಕೆದಾರರು",
     "totalPosts": "ಒಟ್ಟು ಲೇಖನಗಳು",
+    "submitted": "ಸಲ್ಲಿಸಲಾಗಿದೆ",
     "pendingReview": "ಪರಿಶೀಲನೆ ಬಾಕಿ",
     "published": "ಪ್ರಕಟಿಸಲಾಗಿದೆ",
+    "rejected": "ತಿರಸ್ಕರಿಸಲಾಗಿದೆ",
     "registeredUsers": "ನೋಂದಾಯಿತ ಬಳಕೆದಾರರು",
     "noPending": "ಪರಿಶೀಲನೆ ಬಾಕಿ ಲೇಖನಗಳಿಲ್ಲ.",
+    "newPosts": "ಹೊಸ ಲೇಖನಗಳು ({count})",
+    "editReviews": "ತಿದ್ದುಪಡಿ ಪರಿಶೀಲನೆ ({count})",
+    "editBadge": "ತಿದ್ದುಪಡಿ",
+    "anonymous": "ಅನಾಮಿಕ",
     "approve": "ಅನುಮೋದಿಸಿ ಮತ್ತು ಪ್ರಕಟಿಸಿ",
     "reject": "ತಿರಸ್ಕರಿಸಿ",
+    "reviewActions": "ಪರಿಶೀಲನಾ ಕ್ರಮಗಳು",
     "confirmReject": "ತಿರಸ್ಕಾರ ದೃಢಪಡಿಸಿ",
     "cancel": "ರದ್ದು",
     "rejectionReason": "ತಿರಸ್ಕಾರ ಕಾರಣ",
-    "rejectionPlaceholder": "ಈ ಲೇಖನವನ್ನು ತಿರಸ್ಕರಿಸಲು ಕಾರಣ ವಿವರಿಸಿ..."
+    "rejectionPlaceholder": "ಈ ಲೇಖನವನ್ನು ತಿರಸ್ಕರಿಸಲು ಕಾರಣ ವಿವರಿಸಿ...",
+    "userCol": "ಬಳಕೆದಾರ",
+    "joinedCol": "ಸೇರಿದ ದಿನ",
+    "roleCol": "ಪಾತ್ರ",
+    "noName": "ಹೆಸರಿಲ್ಲ",
+    "youSuffix": "(ನೀವು)"
   },
   "errors": {
     "translationFailed": "ಅನುವಾದ ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."

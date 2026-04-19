@@ -132,19 +132,33 @@
     "disclaimer": "By signing in, you agree to contribute knowledge respectfully and authentically."
   },
   "admin": {
+    "title": "Admin",
     "overview": "Overview",
     "reviewQueue": "Review Queue",
+    "users": "Users",
     "totalPosts": "Total Posts",
+    "submitted": "Submitted",
     "pendingReview": "Pending Review",
     "published": "Published",
+    "rejected": "Rejected",
     "registeredUsers": "Registered Users",
     "noPending": "No posts pending review.",
+    "newPosts": "New Posts ({count})",
+    "editReviews": "Edit Reviews ({count})",
+    "editBadge": "Edit",
+    "anonymous": "Anonymous",
     "approve": "Approve & Publish",
     "reject": "Reject",
+    "reviewActions": "Review Actions",
     "confirmReject": "Confirm Reject",
     "cancel": "Cancel",
     "rejectionReason": "Rejection reason",
-    "rejectionPlaceholder": "Explain why this post is being rejected..."
+    "rejectionPlaceholder": "Explain why this post is being rejected...",
+    "userCol": "User",
+    "joinedCol": "Joined",
+    "roleCol": "Role",
+    "noName": "No name",
+    "youSuffix": "(you)"
   },
   "errors": {
     "translationFailed": "Translation failed. Please try again."
