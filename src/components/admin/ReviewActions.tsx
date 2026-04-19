@@ -60,12 +60,12 @@ export function ReviewActions({ postId, postUpdatedAt }: ReviewActionsProps) {
       )}
 
       {!showRejectForm ? (
-        <div className="flex flex-wrap gap-3">
-          <Button variant="primary" onClick={handleApprove} loading={isApproving} disabled={isRejecting}>
-            {t("approve")}
-          </Button>
+        <div className="flex flex-wrap justify-end gap-3">
           <Button variant="danger" onClick={() => setShowRejectForm(true)} disabled={isApproving || isRejecting}>
             {t("reject")}
+          </Button>
+          <Button variant="primary" onClick={handleApprove} loading={isApproving} disabled={isRejecting}>
+            {t("approve")}
           </Button>
         </div>
       ) : (
@@ -80,12 +80,12 @@ export function ReviewActions({ postId, postUpdatedAt }: ReviewActionsProps) {
             maxLength={500}
             showCount
           />
-          <div className="flex gap-3">
-            <Button variant="danger" onClick={handleReject} loading={isRejecting} disabled={!reason.trim()}>
-              {t("confirmReject")}
-            </Button>
+          <div className="flex justify-end gap-3">
             <Button variant="ghost" onClick={() => { setShowRejectForm(false); setReason(""); }} disabled={isRejecting}>
               {t("cancel")}
+            </Button>
+            <Button variant="danger" onClick={handleReject} loading={isRejecting} disabled={!reason.trim()}>
+              {t("confirmReject")}
             </Button>
           </div>
         </div>

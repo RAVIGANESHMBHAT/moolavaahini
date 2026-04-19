@@ -166,45 +166,62 @@ export function MarkdownEditor({ value, onChange, height = 400, error }: Markdow
   }), [])
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const files = Array.from(e.target.files ?? [])
     e.target.value = ''
-    if (!file || !apiRef.current) return
+    if (!files.length || !apiRef.current) return
+
+    // Validate all files upfront
+    for (const file of files) {
+      if (!file.type.startsWith('image/')) { setUploadError('Please select image files only.'); return }
+      if (file.size > MAX_FILE_SIZE) { setUploadError(`"${file.name}" exceeds the 5 MB limit.`); return }
+    }
 
     setUploadError(null)
-    if (!file.type.startsWith('image/')) { setUploadError('Please select an image file.'); return }
-    if (file.size > MAX_FILE_SIZE) { setUploadError('Image must be 5 MB or smaller.'); return }
-
     setIsUploading(true)
-    const uploadId = crypto.randomUUID()
-    const placeholder = `![uploading](${uploadId})`
-    const stateAfterInsert = apiRef.current.replaceSelection(placeholder)
-    const textWithPlaceholder = stateAfterInsert.text
 
-    try {
-      const { blob, mime, ext } = await maybeResize(file, MAX_UPLOAD_WIDTH)
-
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) throw new Error('Not authenticated')
-
-      const path = `${user.id}/${crypto.randomUUID()}.${ext}`
-      const { error: uploadErr } = await supabase.storage
-        .from('post-images')
-        .upload(path, blob, { contentType: mime })
-
-      if (uploadErr) throw uploadErr
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('post-images')
-        .getPublicUrl(path)
-
-      onChange(textWithPlaceholder.replace(placeholder, `![image](${publicUrl})`))
-    } catch (err) {
-      onChange(textWithPlaceholder.replace(placeholder, ''))
-      setUploadError(err instanceof Error ? err.message : 'Upload failed. Please try again.')
-    } finally {
-      setIsUploading(false)
+    // Insert all placeholders at once so the cursor advances naturally
+    const placeholders: { id: string; placeholder: string }[] = files.map(() => {
+      const id = crypto.randomUUID()
+      return { id, placeholder: `![uploading](${id})` }
+    })
+    let currentText = valueRef.current
+    for (const { placeholder } of placeholders) {
+      const state = apiRef.current.replaceSelection(placeholder)
+      currentText = state.text
     }
+
+    // Authenticate once
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      for (const { placeholder } of placeholders) {
+        currentText = currentText.replace(placeholder, '')
+      }
+      onChangeRef.current(currentText)
+      setUploadError('Not authenticated')
+      setIsUploading(false)
+      return
+    }
+
+    // Upload all files in parallel, replacing each placeholder as it resolves
+    await Promise.all(files.map(async (file, i) => {
+      const { placeholder } = placeholders[i]
+      try {
+        const { blob, mime, ext } = await maybeResize(file, MAX_UPLOAD_WIDTH)
+        const path = `${user.id}/${crypto.randomUUID()}.${ext}`
+        const { error: uploadErr } = await supabase.storage
+          .from('post-images')
+          .upload(path, blob, { contentType: mime })
+        if (uploadErr) throw uploadErr
+        const { data: { publicUrl } } = supabase.storage.from('post-images').getPublicUrl(path)
+        onChangeRef.current(valueRef.current.replace(placeholder, `![image](${publicUrl})`))
+      } catch (err) {
+        onChangeRef.current(valueRef.current.replace(placeholder, ''))
+        setUploadError(err instanceof Error ? err.message : 'Upload failed. Please try again.')
+      }
+    }))
+
+    setIsUploading(false)
   }
 
   const imageUploadCommand: ICommand = {
@@ -224,7 +241,7 @@ export function MarkdownEditor({ value, onChange, height = 400, error }: Markdow
 
   return (
     <div>
-      <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+      <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleFileChange} />
       <div
         data-color-mode={theme}
         className={[
