@@ -48,6 +48,8 @@ export async function createPost(formData: FormData): Promise<PostActionResult> 
   const category_id = formData.get('category_id') as string
 
   if (!title) return { success: false, error: 'Title is required' }
+  if (title.length > 200) return { success: false, error: 'Title must be 200 characters or fewer' }
+  if (body.length > 50000) return { success: false, error: 'Content must be 50,000 characters or fewer' }
   if (!community_id) return { success: false, error: 'Community is required' }
   if (!category_id) return { success: false, error: 'Category is required' }
 
@@ -98,8 +100,8 @@ export async function updatePost(
   const category_id = formData.get('category_id') as string
 
   if (!title) return { success: false, error: 'Title is required' }
-
-  let updateSlug: string
+  if (title.length > 200) return { success: false, error: 'Title must be 200 characters or fewer' }
+  if (body.length > 50000) return { success: false, error: 'Content must be 50,000 characters or fewer' }
 
   if (existing.status === 'approved') {
     // Save to pending columns only — live content and status stay unchanged

@@ -41,6 +41,9 @@ interface FormErrors {
   body?: string;
 }
 
+const TITLE_MAX = 200;
+const BODY_MAX = 50000;
+
 function PlainTextarea({
   label,
   id,
@@ -50,6 +53,7 @@ function PlainTextarea({
   rows = 4,
   required = false,
   error,
+  maxLength,
 }: {
   label: string;
   id: string;
@@ -59,19 +63,28 @@ function PlainTextarea({
   rows?: number;
   required?: boolean;
   error?: string;
+  maxLength?: number;
 }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1.5 block text-sm font-medium text-tx2">
-        {label}
-        {required && <span className="ml-0.5 text-red-500">*</span>}
-      </label>
+      <div className="mb-1.5 flex items-baseline justify-between">
+        <label htmlFor={id} className="block text-sm font-medium text-tx2">
+          {label}
+          {required && <span className="ml-0.5 text-red-500">*</span>}
+        </label>
+        {maxLength && (
+          <span className={`text-xs ${value.length > maxLength * 0.9 ? "text-amber-500" : "text-tx4"}`}>
+            {value.length}/{maxLength}
+          </span>
+        )}
+      </div>
       <textarea
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={rows}
+        maxLength={maxLength}
         className={`w-full rounded-lg border bg-surface px-3 py-2 text-sm text-tx placeholder:text-tx4 focus:outline-none focus:ring-1 ${error ? "border-red-500 focus:border-red-500 focus:ring-red-500/20" : "border-border2 focus:border-saffron-500 focus:ring-saffron-500"}`}
       />
       {error && <p className="mt-1 text-xs text-red-500">{error}</p>}
@@ -287,6 +300,7 @@ export function PostForm({
                 rows={4}
                 required
                 error={fieldErrors.title}
+                maxLength={TITLE_MAX}
               />
               {fields.secondaryLabel &&
                 (fields.secondaryUseMarkdown ? (
@@ -323,6 +337,7 @@ export function PostForm({
                     rows={3}
                     required
                     error={fieldErrors.body}
+                    maxLength={BODY_MAX}
                   />
                 ))}
             </>
@@ -339,6 +354,7 @@ export function PostForm({
                 placeholder={t("titlePlaceholder")}
                 required
                 error={fieldErrors.title}
+                maxLength={TITLE_MAX}
               />
               {fields.useMarkdown ? (
                 <div>
@@ -374,6 +390,7 @@ export function PostForm({
                   rows={5}
                   required
                   error={fieldErrors.body}
+                  maxLength={BODY_MAX}
                 />
               )}
             </>

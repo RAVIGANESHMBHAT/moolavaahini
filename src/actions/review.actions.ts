@@ -95,6 +95,9 @@ export async function rejectPost(id: string, reason: string, updatedAt: string):
   if (!reason?.trim()) {
     return { success: false, error: 'Rejection reason is required' }
   }
+  if (reason.trim().length > 500) {
+    return { success: false, error: 'Rejection reason must be 500 characters or fewer' }
+  }
 
   const supabase = await createClient()
 

@@ -40,6 +40,7 @@ export function SearchBar({ placeholder = 'Search content...', className }: Sear
         defaultValue={searchParams.get('q') ?? ''}
         onChange={handleChange}
         placeholder={placeholder}
+        maxLength={200}
         className="w-full rounded-xl border border-border2 bg-surface py-2.5 pl-10 pr-4 text-sm text-tx placeholder:text-tx4 focus:border-saffron-500 focus:outline-none focus:ring-2 focus:ring-saffron-500/20"
       />
     </div>

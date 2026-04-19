@@ -8,7 +8,7 @@ export interface BreadcrumbItem {
 
 export function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
   return (
-    <nav aria-label="Breadcrumb" className="mb-5 flex flex-wrap items-center gap-1 text-sm">
+    <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1 text-sm">
       {items.map((item, i) => (
         <Fragment key={i}>
           {i > 0 && (

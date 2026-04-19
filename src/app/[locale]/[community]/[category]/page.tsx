@@ -58,13 +58,15 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const buildHref = (p: number) => p === 1 ? `/${community}/${category}` : `/${community}/${category}?page=${p}`
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-      <Breadcrumb items={[
-        { label: 'Home', href: '/' },
-        { label: communityData.name, href: `/${community}` },
-        { label: categoryData.name },
-      ]} />
-      <div className="mb-8">
+    <div className="mx-auto max-w-7xl px-4 pb-10 sm:px-6">
+      <div className="sticky top-16 z-30 -mx-4 border-b border-border bg-surface/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-surface/80 sm:-mx-6 sm:px-6">
+        <Breadcrumb items={[
+          { label: 'Home', href: '/' },
+          { label: communityData.name, href: `/${community}` },
+          { label: categoryData.name },
+        ]} />
+      </div>
+      <div className="mb-8 pt-3">
         <h1 className="text-3xl font-bold text-tx">{categoryData.name}</h1>
         <p className="mt-2 text-tx3">{count ?? 0} piece{(count ?? 0) !== 1 ? 's' : ''} of content</p>
       </div>

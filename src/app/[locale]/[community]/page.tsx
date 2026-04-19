@@ -55,12 +55,14 @@ export default async function CommunityPage({ params, searchParams }: PageProps)
   const buildHref = (p: number) => p === 1 ? `/${community}` : `/${community}?page=${p}`
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-      <Breadcrumb items={[
-        { label: tNav('home'), href: '/' },
-        { label: communityData.name },
-      ]} />
-      <div className="mb-8">
+    <div className="mx-auto max-w-7xl px-4 pb-10 sm:px-6">
+      <div className="sticky top-16 z-30 -mx-4 border-b border-border bg-surface/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-surface/80 sm:-mx-6 sm:px-6">
+        <Breadcrumb items={[
+          { label: tNav('home'), href: '/' },
+          { label: communityData.name },
+        ]} />
+      </div>
+      <div className="mb-8 pt-3">
         <h1 className="text-3xl font-bold text-tx">{communityData.name}</h1>
         <p className="mt-2 text-tx3">{tCommunity('piecesOfContent', { count: count ?? 0 })}</p>
       </div>

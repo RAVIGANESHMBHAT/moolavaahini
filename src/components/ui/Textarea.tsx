@@ -4,17 +4,28 @@ import { TextareaHTMLAttributes, forwardRef } from 'react'
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string
   error?: string
+  showCount?: boolean
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className, label, error, id, ...props }, ref) => {
+  ({ className, label, error, id, showCount, ...props }, ref) => {
+    const valueLen = typeof props.value === 'string' ? props.value.length : 0
+    const maxLen = props.maxLength
+
     return (
       <div className="w-full">
         {label && (
-          <label htmlFor={id} className="mb-1.5 block text-sm font-medium text-tx2">
-            {label}
-            {props.required && <span className="ml-0.5 text-red-500">*</span>}
-          </label>
+          <div className="mb-1.5 flex items-baseline justify-between">
+            <label htmlFor={id} className="block text-sm font-medium text-tx2">
+              {label}
+              {props.required && <span className="ml-0.5 text-red-500">*</span>}
+            </label>
+            {showCount && maxLen && (
+              <span className={`text-xs ${valueLen > maxLen * 0.9 ? 'text-amber-500' : 'text-tx4'}`}>
+                {valueLen}/{maxLen}
+              </span>
+            )}
+          </div>
         )}
         <textarea
           ref={ref}
@@ -36,3 +47,4 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
   }
 )
 Textarea.displayName = 'Textarea'
+

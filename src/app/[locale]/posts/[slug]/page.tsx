@@ -55,16 +55,19 @@ export default async function PostPage({ params }: PageProps) {
   const hasPendingEdit = typedPost.pending_submitted_at != null && typedPost.pending_title != null
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-      <div className="mb-6 space-y-3">
+    <div className="mx-auto max-w-3xl px-4 pb-10 sm:px-6">
+      <div className="sticky top-16 z-30 -mx-4 border-b border-border bg-surface/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-surface/80 sm:-mx-6 sm:px-6">
         <Breadcrumb items={[
           { label: 'Home', href: '/' },
           { label: typedPost.community.name, href: `/${typedPost.community.slug}` },
           { label: typedPost.category.name, href: `/${typedPost.community.slug}/${typedPost.category.slug}` },
           { label: typedPost.title },
         ]} />
+      </div>
+
+      <div className="pt-3">
         {(canEdit || (isReviewer && user2 && typedPost.author_id !== user2.id)) && (
-          <div className="flex items-center justify-end gap-2">
+          <div className="mb-6 flex items-center justify-end gap-2">
             {canEdit && (
               <Link href={`/dashboard/edit/${typedPost.id}`} className="inline-flex items-center justify-center rounded-lg border border-border2 px-3 py-1.5 text-xs font-medium text-tx2 hover:bg-surface2">
                 Edit
@@ -73,7 +76,6 @@ export default async function PostPage({ params }: PageProps) {
             <DeleteButton postId={typedPost.id} />
           </div>
         )}
-      </div>
 
       {/* Status banner */}
       {typedPost.status !== 'approved' && (
@@ -122,6 +124,7 @@ export default async function PostPage({ params }: PageProps) {
           <ReviewActions postId={typedPost.id} postUpdatedAt={typedPost.updated_at} />
         </div>
       )}
+      </div>
     </div>
   )
 }

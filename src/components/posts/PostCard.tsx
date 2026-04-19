@@ -15,8 +15,8 @@ export function PostCard({ post, showStatus = false }: PostCardProps) {
   const preview = isOgatu ? null : truncate(post.body.replace(/[#*`>_~\[\]]/g, ''), 160)
 
   return (
-    <Link href={`/posts/${post.slug}`} className="group block">
-      <article className="rounded-xl border border-border bg-surface p-5 transition-shadow hover:shadow-md">
+    <Link href={`/posts/${post.slug}`} className="group block h-full">
+      <article className="flex h-full flex-col rounded-xl border border-border bg-surface p-5 transition-shadow hover:shadow-md">
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <Badge variant="saffron">{post.community.name}</Badge>
           <Badge variant="blue">{post.category.name}</Badge>
@@ -33,7 +33,7 @@ export function PostCard({ post, showStatus = false }: PostCardProps) {
           <p className="mb-4 text-sm text-tx3 line-clamp-2">{preview}</p>
         ) : null}
 
-        <div className="flex items-center gap-2 text-xs text-tx4">
+        <div className="mt-auto flex items-center gap-2 text-xs text-tx4">
           {post.author.avatar_url ? (
             <Image
               src={post.author.avatar_url}

@@ -77,6 +77,8 @@ export function ReviewActions({ postId, postUpdatedAt }: ReviewActionsProps) {
             placeholder={t("rejectionPlaceholder")}
             rows={3}
             required
+            maxLength={500}
+            showCount
           />
           <div className="flex gap-3">
             <Button variant="danger" onClick={handleReject} loading={isRejecting} disabled={!reason.trim()}>
