@@ -9,6 +9,7 @@ interface ConfirmDialogProps {
   onConfirm: () => void
   title: string
   message: string
+  error?: string | null
   confirmLabel?: string
   cancelLabel?: string
   loading?: boolean
@@ -20,13 +21,15 @@ export function ConfirmDialog({
   onConfirm,
   title,
   message,
+  error,
   confirmLabel = 'Confirm',
   cancelLabel = 'Cancel',
   loading = false,
 }: ConfirmDialogProps) {
   return (
     <Modal open={open} onClose={onClose} title={title}>
-      <p className="mb-6 text-sm text-gray-600">{message}</p>
+      <p className="mb-4 text-sm text-gray-600">{message}</p>
+      {error && <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-950/40 dark:text-red-400">{error}</p>}
       <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
         <Button
           variant="secondary"

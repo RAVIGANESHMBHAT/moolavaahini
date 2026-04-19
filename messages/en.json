@@ -123,7 +123,12 @@
     "recipe": "Recipe",
     "recipePlaceholder": "## Ingredients\n\n- \n\n## Method\n\n1. \n\n## Notes\n\n",
     "ritualPlaceholder": "Describe this ritual or tradition...",
-    "plantPlaceholder": "## Plant\n\n\n\n## Medicinal Uses\n\n\n\n## Preparation\n\n"
+    "plantPlaceholder": "## Plant\n\n\n\n## Medicinal Uses\n\n\n\n## Preparation\n\n",
+    "discard": "Discard",
+    "discardConfirm": "Discard post?",
+    "discardMessage": "All unsaved content will be lost.",
+    "discardConfirmLabel": "Yes, discard",
+    "keepEditing": "Keep editing"
   },
   "auth": {
     "welcome": "Welcome to MoolaVaahini",

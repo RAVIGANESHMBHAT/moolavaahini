@@ -123,7 +123,12 @@
     "recipe": "ಪಾಕವಿಧಾನ",
     "recipePlaceholder": "## ಪದಾರ್ಥಗಳು\n\n- \n\n## ಮಾಡುವ ವಿಧಾನ\n\n1. \n\n## ಟಿಪ್ಪಣಿ\n\n",
     "ritualPlaceholder": "ಈ ಆಚರಣೆ ಅಥವಾ ಸಂಪ್ರದಾಯ ವಿವರಿಸಿ...",
-    "plantPlaceholder": "## ಗಿಡ\n\n\n\n## ಔಷಧೀಯ ಉಪಯೋಗಗಳು\n\n\n\n## ತಯಾರಿಕೆ\n\n"
+    "plantPlaceholder": "## ಗಿಡ\n\n\n\n## ಔಷಧೀಯ ಉಪಯೋಗಗಳು\n\n\n\n## ತಯಾರಿಕೆ\n\n",
+    "discard": "ರದ್ದುಮಾಡಿ",
+    "discardConfirm": "ಲೇಖನ ರದ್ದುಮಾಡುವಿರಾ?",
+    "discardMessage": "ಉಳಿಸದ ಎಲ್ಲಾ ವಿಷಯ ಕಳೆದುಹೋಗುತ್ತದೆ.",
+    "discardConfirmLabel": "ಹೌದು, ರದ್ದುಮಾಡಿ",
+    "keepEditing": "ಮುಂದುವರಿಸಿ"
   },
   "auth": {
     "welcome": "ಮೂಲವಾಹಿನಿಗೆ ಸ್ವಾಗತ",

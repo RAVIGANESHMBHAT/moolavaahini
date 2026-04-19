@@ -11,8 +11,10 @@ import {
   createPost,
   updatePost,
   submitForReview,
+  cleanupOrphanedImages,
 } from "@/actions/post.actions";
 import { DiscardEditButton } from "@/components/dashboard/DiscardEditButton";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import type { Community, Category, Post } from "@/types";
 
 interface FieldConfig {
@@ -106,6 +108,7 @@ export function PostForm({
   const [isSubmitting, startSubmitTransition] = useTransition();
   const [serverError, setServerError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FormErrors>({});
+  const [discardOpen, setDiscardOpen] = useState(false);
 
   const [communityId, setCommunityId] = useState(
     post?.community_id ?? lockedCommunity?.id ?? "",
@@ -435,6 +438,31 @@ export function PostForm({
           {pendingEditPostId && (
             <div className="sm:ml-auto">
               <DiscardEditButton postId={pendingEditPostId} />
+            </div>
+          )}
+          {!isEdit && (
+            <div className="sm:ml-auto">
+              <button
+                type="button"
+                onClick={() => setDiscardOpen(true)}
+                disabled={isPending || isSubmitting}
+                className="w-full rounded-lg border border-red-300 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50 dark:border-red-800 dark:hover:bg-red-950/40 sm:w-auto"
+              >
+                {t("discard")}
+              </button>
+              <ConfirmDialog
+                open={discardOpen}
+                onClose={() => setDiscardOpen(false)}
+                onConfirm={async () => {
+                  setDiscardOpen(false)
+                  await cleanupOrphanedImages(body)
+                  router.push("/dashboard")
+                }}
+                title={t("discardConfirm")}
+                message={t("discardMessage")}
+                confirmLabel={t("discardConfirmLabel")}
+                cancelLabel={t("keepEditing")}
+              />
             </div>
           )}
         </div>

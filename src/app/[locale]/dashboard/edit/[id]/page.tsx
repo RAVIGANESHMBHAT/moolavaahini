@@ -51,31 +51,35 @@ export default async function EditPostPage({ params }: PageProps) {
     : typedPost
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-      <div className="mb-8">
+    <div className="mx-auto max-w-3xl px-4 pb-10 sm:px-6">
+      <div className="sticky top-16 z-30 -mx-4 border-b border-border bg-surface/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-surface/80 sm:-mx-6 sm:px-6">
         <Breadcrumb items={[
           { label: tDash('title'), href: '/dashboard' },
           { label: t('editPost') },
         ]} />
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-tx">{t('editPost')}</h1>
-            <p className="mt-1 text-sm text-tx3">
-              {typedPost.status === 'approved'
-                ? t('editPostDescApproved')
-                : t('editPostDesc')}
-            </p>
-          </div>
-          <DeleteButton postId={typedPost.id} />
-        </div>
       </div>
-      <PostForm
-        communities={communities ?? []}
-        categories={categories ?? []}
-        post={formPost}
-        mode="edit"
-        pendingEditPostId={typedPost.status === 'approved' && typedPost.pending_title ? typedPost.id : undefined}
-      />
+      <div className="pt-3">
+        <div className="mb-8">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-tx">{t('editPost')}</h1>
+              <p className="mt-1 text-sm text-tx3">
+                {typedPost.status === 'approved'
+                  ? t('editPostDescApproved')
+                  : t('editPostDesc')}
+              </p>
+            </div>
+            <DeleteButton postId={typedPost.id} />
+          </div>
+        </div>
+        <PostForm
+          communities={communities ?? []}
+          categories={categories ?? []}
+          post={formPost}
+          mode="edit"
+          pendingEditPostId={typedPost.status === 'approved' && typedPost.pending_title ? typedPost.id : undefined}
+        />
+      </div>
     </div>
   )
 }

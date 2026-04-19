@@ -1,8 +1,8 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/service'
 import { requireAuth } from '@/lib/auth'
 
 export type PostActionResult =
@@ -238,13 +238,13 @@ export async function clearEditRejection(id: string): Promise<{ success: boolean
   return { success: true }
 }
 
-export async function deletePost(id: string): Promise<{ success: boolean; error?: string }> {
+export async function deletePost(id: string): Promise<{ success: boolean; error?: string; redirectTo?: string }> {
   const user = await requireAuth()
   const supabase = await createClient()
 
   const { data: post } = await supabase
     .from('posts')
-    .select('author_id, status')
+    .select('author_id, status, body')
     .eq('id', id)
     .single()
 
@@ -262,14 +262,54 @@ export async function deletePost(id: string): Promise<{ success: boolean; error?
     return { success: false, error: 'Not authorized' }
   }
 
-  const { error } = await supabase.from('posts').delete().eq('id', id)
+  // Use the service-role client for the delete — our own auth check above already
+  // verified ownership, so bypassing RLS here is intentional and safe.
+  const serviceClient = createServiceClient()
+
+  // Best-effort: delete any uploaded images. Wrap in try/catch so a missing
+  // bucket or storage error never blocks the post delete.
+  if (post.body) {
+    try {
+      const urlRe = /https?:\/\/[^\s"')]+\/storage\/v1\/object\/public\/post-images\/([^\s"')]+)/g
+      const paths: string[] = []
+      let m: RegExpExecArray | null
+      while ((m = urlRe.exec(post.body)) !== null) paths.push(m[1])
+      if (paths.length > 0) {
+        await serviceClient.storage.from('post-images').remove(paths)
+      }
+    } catch {
+      // Storage cleanup is best-effort; don't block post deletion
+    }
+  }
+
+  const { data: deleted, error } = await serviceClient
+    .from('posts')
+    .delete()
+    .eq('id', id)
+    .select('id')
+
   if (error) return { success: false, error: error.message }
+  if (!deleted || deleted.length === 0) return { success: false, error: 'Post not found.' }
 
   revalidatePath('/dashboard')
   revalidatePath('/admin/review')
-  // Admins deleting someone else's post go back to the review queue
-  if (isAdmin && post.author_id !== user.id) {
-    redirect('/admin/review')
+  const redirectTo = isAdmin && post.author_id !== user.id ? '/admin/review' : '/dashboard'
+  return { success: true, redirectTo }
+}
+
+/** Delete any post-images storage objects found in the given markdown body.
+ *  Used when a new post draft is discarded before saving. */
+export async function cleanupOrphanedImages(body: string): Promise<void> {
+  if (!body) return
+  const urlRe = /https?:\/\/[^\s"')]+\/storage\/v1\/object\/public\/post-images\/([^\s"')]+)/g
+  const paths: string[] = []
+  let m: RegExpExecArray | null
+  while ((m = urlRe.exec(body)) !== null) paths.push(m[1])
+  if (paths.length === 0) return
+  try {
+    const serviceClient = createServiceClient()
+    await serviceClient.storage.from('post-images').remove(paths)
+  } catch {
+    // Best-effort; don't surface storage errors to the user
   }
-  redirect('/dashboard')
 }

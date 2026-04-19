@@ -8,7 +8,7 @@ export function PostActionsMenu({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
+      if (ref.current && !ref.current.contains(e.target as Node) && !(e.target as Element).closest('dialog')) {
         setOpen(false)
       }
     }
@@ -37,7 +37,10 @@ export function PostActionsMenu({ children }: { children: React.ReactNode }) {
         {open && (
           <div
             className="absolute right-0 top-full z-20 mt-1 flex min-w-[140px] flex-col gap-1.5 rounded-xl border border-border bg-surface p-2 shadow-lg [&>*]:w-full [&>*]:justify-start [&>div>button]:w-full"
-            onClick={() => setOpen(false)}
+            onClick={(e) => {
+              // Only close the menu when navigating (link click), not when opening dialogs (button click)
+              if ((e.target as Element).closest('a')) setOpen(false)
+            }}
           >
             {children}
           </div>
