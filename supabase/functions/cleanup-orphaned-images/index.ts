@@ -1,7 +1,7 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 
 const BUCKET = 'post-images'
-const GRACE_PERIOD_HOURS = 24
+const GRACE_PERIOD_HOURS = 24 * 7 // 7 days — gives users plenty of time to finish writing before cleanup
 
 Deno.serve(async (req) => {
   // Protect the endpoint with a shared secret so only the cron caller can trigger it
