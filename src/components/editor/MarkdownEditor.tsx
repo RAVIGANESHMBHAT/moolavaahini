@@ -4,6 +4,7 @@ import { useRef, useState, useEffect, useMemo } from 'react'
 import dynamic from 'next/dynamic'
 import { useTheme } from '@/lib/theme'
 import { createClient } from '@/lib/supabase/client'
+import { trackImageUpload } from '@/actions/post.actions'
 import type { ICommand } from '@uiw/react-md-editor'
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
@@ -214,6 +215,10 @@ export function MarkdownEditor({ value, onChange, height = 400, error }: Markdow
           .upload(path, blob, { contentType: mime })
         if (uploadErr) throw uploadErr
         const { data: { publicUrl } } = supabase.storage.from('post-images').getPublicUrl(path)
+        // Fire-and-forget: record the upload in the tracking table so the cleanup job
+        // knows this image exists. Errors here are non-fatal — worst case the image
+        // gets orphaned and the cleanup job will remove it after the grace period.
+        trackImageUpload(path).catch(() => {})
         onChangeRef.current(valueRef.current.replace(placeholder, `![image](${publicUrl})`))
       } catch (err) {
         onChangeRef.current(valueRef.current.replace(placeholder, ''))

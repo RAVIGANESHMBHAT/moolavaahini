@@ -9,6 +9,62 @@ export type PostActionResult =
   | { success: true; slug: string; id?: string }
   | { success: false; error: string }
 
+// Regex to extract storage paths from post body markdown/HTML
+const IMAGE_PATH_RE =
+  /\/storage\/v1\/object\/public\/post-images\/([^\s"')<>]+)/g
+
+/** Extract all image storage paths referenced in a post body. */
+function extractImagePaths(body: string): string[] {
+  const paths: string[] = []
+  let m: RegExpExecArray | null
+  IMAGE_PATH_RE.lastIndex = 0
+  while ((m = IMAGE_PATH_RE.exec(body)) !== null) paths.push(m[1])
+  return paths
+}
+
+/** Record a newly uploaded image in the tracking table (post_id = NULL until post is saved). */
+export async function trackImageUpload(path: string): Promise<void> {
+  const user = await requireAuth()
+  const serviceClient = createServiceClient()
+  // Ignore conflicts — if the same path is somehow uploaded twice, keep the original row
+  await serviceClient
+    .from('image_uploads')
+    .upsert({ path, user_id: user.id }, { onConflict: 'path', ignoreDuplicates: true })
+}
+
+/** Link all images found in body to the given post. Called after create/update.
+ *  @param extraBody  Additional body to protect from unlinking (e.g. live body when saving approved post pending edits) */
+async function linkImagesToPost(body: string, postId: string, extraBody = ''): Promise<void> {
+  const serviceClient = createServiceClient()
+  // Union paths from both bodies — never unlink an image still referenced in either
+  const currentPaths = [...new Set([...extractImagePaths(body), ...extractImagePaths(extraBody)])]
+
+  // Unlink images previously linked to this post but no longer in any active body.
+  // Setting post_id = NULL marks them as orphaned — the cleanup job removes them after the grace period.
+  if (currentPaths.length > 0) {
+    await serviceClient
+      .from('image_uploads')
+      .update({ post_id: null })
+      .eq('post_id', postId)
+      .not('path', 'in', `(${currentPaths.join(',')})`)
+  } else {
+    // No images in either body — unlink everything previously linked to this post
+    await serviceClient
+      .from('image_uploads')
+      .update({ post_id: null })
+      .eq('post_id', postId)
+  }
+
+  // Link images in the new body that aren't yet linked to any post
+  if (currentPaths.length > 0) {
+    await serviceClient
+      .from('image_uploads')
+      .update({ post_id: postId })
+      .in('path', currentPaths)
+      .is('post_id', null)
+  }
+}
+
 // Generate a URL-safe slug. Falls back to a random ID for non-ASCII titles (e.g. Kannada).
 function makeSlug(title: string): string {
   const ascii = title
@@ -71,6 +127,8 @@ export async function createPost(formData: FormData): Promise<PostActionResult> 
 
   if (error) return { success: false, error: error.message }
 
+  await linkImagesToPost(body, data.id)
+
   revalidatePath('/dashboard')
   return { success: true, slug: data.slug, id: data.id }
 }
@@ -106,7 +164,15 @@ export async function updatePost(
   let updateSlug: string
 
   if (existing.status === 'approved') {
-    // Save to pending columns only — live content and status stay unchanged
+    // For approved posts, edits stage into pending columns — the live body stays published.
+    // We must fetch the live body so we don't unlink images that are still shown on the live post.
+    const { data: livePost } = await supabase
+      .from('posts')
+      .select('body')
+      .eq('id', id)
+      .single()
+    const liveBody = livePost?.body ?? ''
+
     const { data, error } = await supabase
       .from('posts')
       .update({
@@ -120,6 +186,8 @@ export async function updatePost(
       .single()
     if (error) return { success: false, error: error.message }
     updateSlug = data.slug
+    // Pass both bodies: only unlink images absent from both live and pending content
+    await linkImagesToPost(body, id, liveBody)
   } else {
     // draft / rejected / pending_review: overwrite live content directly
     const { data, error } = await supabase
@@ -130,6 +198,7 @@ export async function updatePost(
       .single()
     if (error) return { success: false, error: error.message }
     updateSlug = data.slug
+    await linkImagesToPost(body, id)
   }
 
   revalidatePath('/dashboard')
@@ -301,14 +370,12 @@ export async function deletePost(id: string): Promise<{ success: boolean; error?
  *  Used when a new post draft is discarded before saving. */
 export async function cleanupOrphanedImages(body: string): Promise<void> {
   if (!body) return
-  const urlRe = /https?:\/\/[^\s"')]+\/storage\/v1\/object\/public\/post-images\/([^\s"')]+)/g
-  const paths: string[] = []
-  let m: RegExpExecArray | null
-  while ((m = urlRe.exec(body)) !== null) paths.push(m[1])
+  const paths = extractImagePaths(body)
   if (paths.length === 0) return
   try {
     const serviceClient = createServiceClient()
     await serviceClient.storage.from('post-images').remove(paths)
+    await serviceClient.from('image_uploads').delete().in('path', paths)
   } catch {
     // Best-effort; don't surface storage errors to the user
   }

@@ -81,6 +81,11 @@ Run each migration file in order:
 - Paste the entire contents into the SQL Editor
 - Click **Run**
 
+**Step 5 – Image upload tracking table**
+- Open `supabase/migrations/00005_image_uploads.sql`
+- Paste the entire contents into the SQL Editor
+- Click **Run**
+
 ---
 
 ## 5. Configure Google Authentication
@@ -179,7 +184,45 @@ To add an upload policy:
 
 ---
 
-## 10. Deploy to Vercel
+## 10. Set up orphaned image cleanup (optional but recommended)
+
+A daily cleanup job deletes images that were uploaded but never saved to a post (e.g. user closed the tab mid-edit, or removed an image before saving). It runs as a Supabase Edge Function triggered by GitHub Actions.
+
+### Deploy the Edge Function
+
+1. Install the Supabase CLI if you haven't: https://supabase.com/docs/guides/cli
+2. Link your project:
+   ```bash
+   supabase login
+   supabase link --project-ref <your-project-ref>
+   ```
+3. Deploy the function:
+   ```bash
+   supabase functions deploy cleanup-orphaned-images
+   ```
+4. Set the required secrets on the function:
+   ```bash
+   # Generate a random secret (keep it, you'll need it for GitHub too)
+   openssl rand -hex 32
+
+   supabase secrets set CLEANUP_SECRET=<your-random-secret>
+   ```
+   `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are automatically available inside Edge Functions — no need to set them manually.
+
+### Add GitHub Actions secrets
+
+In your GitHub repository, go to **Settings → Secrets and variables → Actions** and add:
+
+| Secret | Value |
+|---|---|
+| `SUPABASE_EDGE_FUNCTION_URL` | `https://<your-project-ref>.supabase.co/functions/v1` |
+| `CLEANUP_SECRET` | The same random secret you set above |
+
+The workflow at `.github/workflows/cleanup-images.yml` runs daily at 2 AM UTC. You can also trigger it manually from the **Actions** tab.
+
+---
+
+## 11. Deploy to Vercel
 
 ### Prerequisites
 - A [Vercel](https://vercel.com) account
