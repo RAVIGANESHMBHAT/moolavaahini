@@ -28,6 +28,9 @@ export const metadata: Metadata = {
   },
   description:
     'Preserving and sharing cultural knowledge from Havyaka and Kannada communities.',
+  icons: {
+    icon: '/icon.svg',
+  },
 }
 
 export default async function LocaleLayout({
