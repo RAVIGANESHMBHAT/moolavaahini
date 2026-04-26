@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +13,7 @@ export function AdminNav({ items, mobile = false }: AdminNavProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [pendingHref, setPendingHref] = useState<string | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const handleClick = (href: string) => {
     if (pathname === href) return;
@@ -24,15 +25,23 @@ export function AdminNav({ items, mobile = false }: AdminNavProps) {
   const resolvedPending =
     pendingHref && pathname === pendingHref ? null : pendingHref;
 
+  // Scroll active pill into view on mount and pathname change
+  useEffect(() => {
+    if (!scrollRef.current) return;
+    const active = scrollRef.current.querySelector('[data-active="true"]') as HTMLElement | null;
+    active?.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'center' });
+  }, [pathname]);
+
   if (mobile) {
     return (
-      <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+      <div ref={scrollRef} className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
         {items.map((item) => {
           const isActive =
             pathname === item.href || resolvedPending === item.href;
           return (
             <button
               key={item.href}
+              data-active={isActive ? "true" : undefined}
               onClick={() => handleClick(item.href)}
               className={cn(
                 "shrink-0 rounded-full border px-4 py-1.5 text-sm font-medium transition-colors",
