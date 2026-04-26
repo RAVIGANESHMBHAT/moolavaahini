@@ -50,6 +50,12 @@ export default async function PostPage({ params }: PageProps) {
   const role = user2 ? await getUserRole(user2.id) : null
   const isReviewer = role === 'admin'
 
+  // Record a view for approved posts (fire-and-forget — must not block or fail the page)
+  if (typedPost.status === 'approved') {
+    const today = new Date().toISOString().slice(0, 10)
+    createClient().then((sb) => sb.rpc('increment_post_view', { p_post_id: typedPost.id, p_date: today })).catch(() => {})
+  }
+
   const canReview = isReviewer && (
     typedPost.status === 'pending_review' ||
     (typedPost.status === 'approved' && typedPost.pending_submitted_at != null)

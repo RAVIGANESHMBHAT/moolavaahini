@@ -185,7 +185,35 @@
     "removeVerificationConfirmLabel": "ಹೌದು, ತೆಗೆದುಹಾಕಿ",
     "verifiedLabel": "ಪ್ರಮಾಣಿತ",
     "notVerified": "ಇನ್ನೂ ಪ್ರಮಾಣಿಸಲಾಗಿಲ್ಲ",
-    "approveAndVerify": "ಪ್ರಮಾಣಿತ ಎಂದು ಗುರುತಿಸಿ"
+    "approveAndVerify": "ಪ್ರಮಾಣಿತ ಎಂದು ಗುರುತಿಸಿ",
+    "analytics": "ವಿಶ್ಲೇಷಣೆ"
+  },
+  "analytics": {
+    "title": "ವಿಶ್ಲೇಷಣೆ",
+    "dateFrom": "ದಿನಾಂಕದಿಂದ",
+    "dateTo": "ದಿನಾಂಕದವರೆಗೆ",
+    "totalViews": "ಒಟ್ಟು ವೀಕ್ಷಣೆಗಳು",
+    "postsSubmitted": "ಸಲ್ಲಿಸಿದ ಲೇಖನಗಳು",
+    "postsPublished": "ಪ್ರಕಟಿಸಿದ ಲೇಖನಗಳು",
+    "newUsers": "ಹೊಸ ಬಳಕೆದಾರರು",
+    "postsActivity": "ಲೇಖನ ಚಟುವಟಿಕೆ",
+    "viewsOverTime": "ಕಾಲಾನುಕ್ರಮದ ವೀಕ್ಷಣೆಗಳು",
+    "userGrowth": "ಬಳಕೆದಾರ ಬೆಳವಣಿಗೆ",
+    "topPosts": "ಜನಪ್ರಿಯ ಲೇಖನಗಳು",
+    "viewCount": "ವೀಕ್ಷಣೆಗಳು",
+    "viewCountSingular": "ವೀಕ್ಷಣೆ",
+    "submitted": "ಸಲ್ಲಿಸಿದ",
+    "published": "ಪ್ರಕಟಿಸಿದ",
+    "byCommunity": "ಸಮುದಾಯದ ಮೂಲಕ ವಿಷಯ",
+    "byCategory": "ವಿಭಾಗದ ಮೂಲಕ ವಿಷಯ",
+    "reviewQuality": "ಪರಿಶೀಲನಾ ಗುಣಮಟ್ಟ",
+    "approvalRate": "ಅನುಮೋದನೆ ದರ",
+    "avgReviewTime": "ಸರಾಸರಿ ಪರಿಶೀಲನಾ ಸಮಯ",
+    "hours": "ಗಂಟೆ",
+    "approved": "ಅನುಮೋದಿಸಲಾಗಿದೆ",
+    "rejected": "ತಿರಸ್ಕರಿಸಲಾಗಿದೆ",
+    "noData": "ಆಯ್ದ ಅವಧಿಗೆ ಯಾವುದೇ ಮಾಹಿತಿ ಲಭ್ಯವಿಲ್ಲ.",
+    "allTime": "ಒಟ್ಟು ಪ್ರಕಟಿತ ಲೇಖನಗಳ ಸಾರಾಂಶ"
   },
   "errors": {
     "translationFailed": "ಅನುವಾದ ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."

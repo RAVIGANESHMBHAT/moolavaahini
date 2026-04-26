@@ -80,7 +80,13 @@
   }
 }
 
-/* Markdown preview: inherit from context */
+/* Recharts: theme-aware axis tick and label text */
+.recharts-cartesian-axis-tick text,
+.recharts-polar-angle-axis-tick text,
+.recharts-label {
+  fill: var(--color-text) !important;
+}
+
 .wmde-markdown {
   background-color: transparent !important;
   color: inherit !important;

@@ -185,7 +185,35 @@
     "removeVerificationConfirmLabel": "Yes, remove",
     "verifiedLabel": "Verified",
     "notVerified": "Not yet verified",
-    "approveAndVerify": "Mark as verified"
+    "approveAndVerify": "Mark as verified",
+    "analytics": "Analytics"
+  },
+  "analytics": {
+    "title": "Analytics",
+    "dateFrom": "From",
+    "dateTo": "To",
+    "totalViews": "Total Views",
+    "postsSubmitted": "Posts Submitted",
+    "postsPublished": "Posts Published",
+    "newUsers": "New Users",
+    "postsActivity": "Posts Activity",
+    "viewsOverTime": "Views Over Time",
+    "userGrowth": "User Growth",
+    "topPosts": "Top Posts",
+    "viewCount": "Views",
+    "viewCountSingular": "View",
+    "submitted": "Submitted",
+    "published": "Published",
+    "byCommunity": "Content by Community",
+    "byCategory": "Content by Category",
+    "reviewQuality": "Review Quality",
+    "approvalRate": "Approval Rate",
+    "avgReviewTime": "Avg. Review Time",
+    "hours": "hrs",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "noData": "No data for the selected period.",
+    "allTime": "All-time published totals"
   },
   "errors": {
     "translationFailed": "Translation failed. Please try again."
