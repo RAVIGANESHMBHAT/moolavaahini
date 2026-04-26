@@ -195,9 +195,9 @@ function ContributorCard({
               <button
                 onClick={handleMarkUnpaid}
                 disabled={isPending}
-                className="text-xs text-tx4 hover:text-danger underline underline-offset-2"
+                className="text-xs text-tx4 hover:text-danger underline underline-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {t('undo')}
+                {isPending ? t('undoing') : t('undo')}
               </button>
             </div>
           ) : (

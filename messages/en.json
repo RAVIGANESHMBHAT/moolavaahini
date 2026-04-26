@@ -236,6 +236,7 @@
     "completedPayments": "Completed Payments",
     "markAsPaid": "Mark as Paid",
     "undo": "Undo",
+    "undoing": "Undoing…",
     "confirmPayment": "Confirm Payment",
     "notesPlaceholder": "Transaction reference (optional)",
     "saving": "Saving…",
