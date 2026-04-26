@@ -105,8 +105,8 @@ export function ReceiptModal({ paymentId, label }: Props) {
             onClick={handleClose}
           />
 
-          {/* Dialog */}
-          <div className="fixed inset-4 z-50 flex flex-col overflow-hidden rounded-2xl border border-border bg-surface shadow-2xl sm:inset-8 md:inset-x-[8%] md:inset-y-8 lg:inset-x-[18%]">
+          {/* Dialog — bottom sheet on mobile, centered on desktop */}
+          <div className="fixed inset-x-0 bottom-0 z-50 flex max-h-[92dvh] flex-col overflow-hidden rounded-t-2xl border border-border bg-surface shadow-2xl sm:inset-8 sm:rounded-2xl md:inset-x-[8%] md:inset-y-8 lg:inset-x-[18%]">
 
             {/* Header */}
             <div className="flex shrink-0 items-center justify-between border-b border-border bg-surface px-6 py-4">
@@ -120,7 +120,8 @@ export function ReceiptModal({ paymentId, label }: Props) {
                   <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a1 1 0 001 1h8a1 1 0 001-1v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a1 1 0 00-1-1H6a1 1 0 00-1 1zm2 0h6v3H7V4zm-1 9v-2h8v2H6zm-2-4a1 1 0 100 2 1 1 0 000-2z" clipRule="evenodd" />
                   </svg>
-                  Print / Save as PDF
+                  <span className="hidden sm:inline">Print / Save as PDF</span>
+                  <span className="sm:hidden">Print</span>
                 </button>
                 <button
                   onClick={handleClose}

@@ -33,7 +33,7 @@ export function ReceiptDocument({ receipt, getCatName }: Props) {
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white text-gray-900 shadow-sm">
 
       {/* ── Top band ── */}
-      <div className="px-8 py-6" style={{ backgroundColor: '#d97706' }}>
+      <div className="px-4 py-5 sm:px-6 sm:py-6" style={{ backgroundColor: '#d97706' }}>
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-widest" style={{ color: '#fef3c7' }}>
@@ -49,19 +49,19 @@ export function ReceiptDocument({ receipt, getCatName }: Props) {
         </div>
       </div>
 
-      <div className="px-8 py-8">
+      <div className="px-4 py-6 sm:px-8 sm:py-8">
 
         {/* ── Paid to / Period ── */}
-        <div className="mb-8 grid grid-cols-2 gap-6 border-b border-gray-200 pb-8">
+        <div className="mb-6 grid grid-cols-2 gap-4 border-b border-gray-200 pb-6 sm:mb-8 sm:gap-6 sm:pb-8">
           <div>
             <p className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-gray-400">Paid to</p>
-            <p className="text-lg font-bold text-gray-900">{receipt.contributorName}</p>
+            <p className="text-base font-bold text-gray-900 sm:text-lg">{receipt.contributorName}</p>
             <p className="mt-0.5 text-xs text-gray-500">Content Contributor</p>
           </div>
           <div className="text-right">
             <p className="mb-1 text-[10px] font-semibold uppercase tracking-widest text-gray-400">Payment period</p>
-            <p className="text-base font-semibold text-gray-900">{monthLabel(receipt.month)}</p>
-            <p className="mt-0.5 text-xs text-gray-500">Payment date: {formatDate(receipt.paidAt)}</p>
+            <p className="text-sm font-semibold text-gray-900 sm:text-base">{monthLabel(receipt.month)}</p>
+            <p className="mt-0.5 text-xs text-gray-500">Paid: {formatDate(receipt.paidAt)}</p>
             {receipt.notes && (
               <p className="mt-0.5 text-xs text-gray-500">Ref: {receipt.notes}</p>
             )}
@@ -69,27 +69,27 @@ export function ReceiptDocument({ receipt, getCatName }: Props) {
         </div>
 
         {/* ── Line items ── */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b-2 border-gray-900">
-                <th className="pb-2 text-left text-xs font-bold uppercase tracking-wider text-gray-500">#</th>
+                <th className="hidden pb-2 text-left text-xs font-bold uppercase tracking-wider text-gray-500 sm:table-cell">#</th>
                 <th className="pb-2 text-left text-xs font-bold uppercase tracking-wider text-gray-500">Description</th>
                 <th className="pb-2 text-center text-xs font-bold uppercase tracking-wider text-gray-500">Qty</th>
-                <th className="pb-2 text-right text-xs font-bold uppercase tracking-wider text-gray-500">Unit Rate</th>
+                <th className="hidden pb-2 text-right text-xs font-bold uppercase tracking-wider text-gray-500 sm:table-cell">Unit Rate</th>
                 <th className="pb-2 text-right text-xs font-bold uppercase tracking-wider text-gray-500">Amount</th>
               </tr>
             </thead>
             <tbody>
               {Object.entries(byCategory).map(([slug, { count, rate, subtotal }], i) => (
                 <tr key={slug} className="border-b border-gray-100">
-                  <td className="py-3 text-gray-400">{i + 1}</td>
+                  <td className="hidden py-3 text-gray-400 sm:table-cell">{i + 1}</td>
                   <td className="py-3 font-medium text-gray-900">
                     {getCatName(slug)}
-                    <span className="ml-2 text-xs text-gray-400">content</span>
+                    <span className="ml-1.5 text-xs text-gray-400">content</span>
                   </td>
                   <td className="py-3 text-center text-gray-700">{count}</td>
-                  <td className="py-3 text-right text-gray-700">₹{rate}</td>
+                  <td className="hidden py-3 text-right text-gray-700 sm:table-cell">₹{rate}</td>
                   <td className="py-3 text-right font-semibold text-gray-900">₹{subtotal}</td>
                 </tr>
               ))}
@@ -98,8 +98,8 @@ export function ReceiptDocument({ receipt, getCatName }: Props) {
         </div>
 
         {/* ── Totals ── */}
-        <div className="mb-8 flex justify-end">
-          <div className="w-64">
+        <div className="mb-6 sm:mb-8 sm:flex sm:justify-end">
+          <div className="w-full sm:w-64">
             <div className="flex justify-between border-b border-gray-200 py-2 text-sm">
               <span className="text-gray-500">Subtotal ({receipt.posts.length} posts)</span>
               <span className="font-medium text-gray-900">₹{receipt.amount}</span>
@@ -127,17 +127,16 @@ export function ReceiptDocument({ receipt, getCatName }: Props) {
 
         {/* ── Individual post list ── */}
         {receipt.posts.length > 0 && (
-          <div className="mb-8 rounded-lg border border-gray-100 p-4" style={{ backgroundColor: '#f9fafb' }}>
-            <p className="mb-3 text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+          <div className="mb-6 rounded-lg border border-gray-100 p-3 sm:mb-8 sm:p-4" style={{ backgroundColor: '#f9fafb' }}>
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-widest text-gray-400 sm:mb-3">
               Approved Posts — {monthLabel(receipt.month)}
             </p>
-            <ul className="space-y-1.5">
+            <ul className="space-y-2">
               {receipt.posts.map((post, i) => (
-                <li key={post.slug} className="flex items-start gap-3 text-xs">
+                <li key={post.slug} className="flex items-start gap-2 text-xs">
                   <span className="mt-0.5 shrink-0 text-gray-300">{String(i + 1).padStart(2, '0')}.</span>
-                  <span className="flex-1 text-gray-700">{post.title}</span>
-                  <span className="shrink-0 text-gray-400">{getCatName(post.category)}</span>
-                  <span className="w-10 shrink-0 text-right font-medium text-gray-600">₹{post.rate}</span>
+                  <span className="flex-1 leading-relaxed text-gray-700">{post.title}</span>
+                  <span className="shrink-0 font-medium text-gray-600">₹{post.rate}</span>
                 </li>
               ))}
             </ul>

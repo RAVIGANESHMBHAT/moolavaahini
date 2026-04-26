@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition, useEffect, useCallback } from 'react'
+import { useState, useTransition, useEffect, useCallback, useRef } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { CATEGORIES } from '@/lib/categories'
@@ -162,62 +162,59 @@ function ContributorCard({
   return (
     <div className="rounded-xl border border-border bg-surface overflow-hidden">
       {/* Main row */}
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-5 py-3">
-        <button
-          onClick={() => setExpanded((e) => !e)}
-          className="shrink-0 text-tx3 hover:text-tx transition-colors"
-          aria-label="Toggle posts"
-        >
-          <span className={`inline-block text-xs transition-transform ${expanded ? 'rotate-90' : ''}`}>▶</span>
-        </button>
-
-        {/* Name */}
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-tx">{contributor.displayName}</p>
+      <div className="px-4 py-3 sm:px-5">
+        {/* Top line: expand + name + amount — always visible */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setExpanded((e) => !e)}
+            className="shrink-0 text-tx3 hover:text-tx transition-colors"
+            aria-label="Toggle posts"
+          >
+            <span className={`inline-block text-xs transition-transform ${expanded ? 'rotate-90' : ''}`}>▶</span>
+          </button>
+          <p className="min-w-0 flex-1 truncate text-sm font-semibold text-tx">{contributor.displayName}</p>
+          <span className="shrink-0 text-sm font-bold text-tx">
+            {contributor.status === 'paid' && contributor.paidAmount != null
+              ? `₹${contributor.paidAmount}`
+              : `₹${amount}`}
+          </span>
         </div>
 
-        {/* Stats */}
-        <span className="text-sm text-tx3">
-          {contributor.postCount} {contributor.postCount === 1 ? t('post') : t('posts')}
-        </span>
-        <span className="text-sm text-tx3">{contributor.totalViews} {t('views')}</span>
+        {/* Bottom line: stats + action */}
+        <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 pl-5">
+          <span className="text-xs text-tx3">
+            {contributor.postCount} {contributor.postCount === 1 ? t('post') : t('posts')} · {contributor.totalViews} {t('views')}
+          </span>
 
-        {/* Amount */}
-        <span className="text-sm font-bold text-tx w-20 text-right">
-          {contributor.status === 'paid' && contributor.paidAmount != null
-            ? `₹${contributor.paidAmount}`
-            : `₹${amount}`}
-        </span>
-
-        {/* Status / action */}
-        {contributor.status === 'paid' ? (
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-400">
-              ✓ {t('paid')} {formatDate(contributor.paidAt)}
-            </span>
-            <ReceiptModal paymentId={contributor.paymentId!} label={t('viewReceipt')} />
+          {contributor.status === 'paid' ? (
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              <span className="flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                ✓ {t('paid')} {formatDate(contributor.paidAt)}
+              </span>
+              <ReceiptModal paymentId={contributor.paymentId!} label={t('viewReceipt')} />
+              <button
+                onClick={handleMarkUnpaid}
+                disabled={isPending}
+                className="text-xs text-tx4 hover:text-danger underline underline-offset-2"
+              >
+                {t('undo')}
+              </button>
+            </div>
+          ) : (
             <button
-              onClick={handleMarkUnpaid}
+              onClick={() => setShowConfirm(true)}
               disabled={isPending}
-              className="text-xs text-tx4 hover:text-danger underline underline-offset-2"
+              className="shrink-0 rounded-lg bg-green-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-green-700 disabled:opacity-50"
             >
-              {t('undo')}
+              {t('markAsPaid')}
             </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => setShowConfirm(true)}
-            disabled={isPending}
-            className="shrink-0 rounded-lg bg-green-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-green-700 disabled:opacity-50"
-          >
-            {t('markAsPaid')}
-          </button>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Paid notes */}
       {contributor.status === 'paid' && contributor.notes && (
-        <div className="border-t border-border px-5 py-2">
+        <div className="border-t border-border px-4 py-2 sm:px-5">
           <p className="text-xs text-tx3">{t('ref')}: {contributor.notes}</p>
         </div>
       )}
@@ -226,19 +223,17 @@ function ContributorCard({
       {expanded && (
         <ul className="border-t border-border divide-y divide-border">
           {contributor.posts.map((post) => (
-            <li key={post.id} className="flex items-center justify-between gap-4 pl-12 pr-5 py-2">
+            <li key={post.id} className="flex items-start gap-3 px-4 py-2.5 sm:px-5">
               <div className="min-w-0 flex-1">
                 <Link
                   href={`/posts/${post.slug}`}
-                  className="truncate text-sm text-tx hover:text-saffron-700 dark:hover:text-saffron-400"
+                  className="block truncate text-sm text-tx hover:text-saffron-700 dark:hover:text-saffron-400"
                 >
                   {post.title}
                 </Link>
-              </div>
-              <div className="flex items-center gap-3 shrink-0">
-                <span className="text-xs text-tx4">{tCat(catKey(post.category))}</span>
-                <span className="text-xs font-medium text-tx3">₹{rates[post.category] ?? 0}</span>
-                <span className="text-xs text-tx3">{post.totalViews} {t('views')}</span>
+                <p className="mt-0.5 text-xs text-tx4">
+                  {tCat(catKey(post.category))} · ₹{rates[post.category] ?? 0} · {post.totalViews} {t('views')}
+                </p>
               </div>
             </li>
           ))}
@@ -303,6 +298,12 @@ export default function PayoutsPage() {
   const [isPending, startTransition] = useTransition()
   const [isSavingRates, setIsSavingRates] = useState(false)
   const [ratesSaved, setRatesSaved] = useState(false)
+  const dataRef = useRef<HTMLDivElement>(null)
+
+  const handleSelectMonth = (m: string) => {
+    setMonth(m)
+    setTimeout(() => dataRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
+  }
 
   const loadData = useCallback(() => {
     startTransition(async () => {
@@ -343,7 +344,7 @@ export default function PayoutsPage() {
         <OutstandingSection
           outstanding={outstanding}
           rates={rates}
-          onSelectMonth={setMonth}
+          onSelectMonth={handleSelectMonth}
         />
       )}
 
@@ -364,19 +365,20 @@ export default function PayoutsPage() {
         {isPending && <p className="pb-2 text-xs text-tx4">{t('loading')}</p>}
       </div>
 
+      {ratesLoaded && (
+      <>
       {/* Per-category rates */}
-      <div className="mb-6 rounded-xl border border-border bg-surface p-4">
+      <div ref={dataRef} className="mb-6 rounded-xl border border-border bg-surface p-4">
         <div className="mb-3 flex items-center justify-between">
           <p className="text-xs font-semibold uppercase tracking-wider text-tx3">{t('ratesTitle')}</p>
           <button
             onClick={handleSaveRates}
-            disabled={!ratesLoaded || isSavingRates || ratesSaved}
+            disabled={isSavingRates || ratesSaved}
             className="rounded-lg border border-border px-3 py-1 text-xs font-medium text-tx2 hover:bg-surface-2 disabled:opacity-60 transition-colors"
           >
             {isSavingRates ? t('saving') : ratesSaved ? `✓ ${t('ratesSaved')}` : t('saveRates')}
           </button>
         </div>
-        {ratesLoaded ? (
         <div className="flex flex-wrap gap-3">
           {CATEGORIES.map((cat) => (
             <div key={cat.slug}>
@@ -394,44 +396,34 @@ export default function PayoutsPage() {
             </div>
           ))}
         </div>
-        ) : (
-        <div className="flex flex-wrap gap-3">
-          {CATEGORIES.map((cat) => (
-            <div key={cat.slug} className="animate-pulse">
-              <div className="mb-1 h-3 w-24 rounded bg-surface-2" />
-              <div className="h-8 w-28 rounded-lg bg-surface-2" />
-            </div>
-          ))}
-        </div>
-        )}
       </div>
 
-      {data && ratesLoaded && (
+      {data && (
         <div className="space-y-6">
           {/* Summary */}
-          <div className="grid gap-4 sm:grid-cols-4">
-            <div className="rounded-xl border border-border bg-surface p-5">
-              <p className="text-3xl font-bold text-tx">{data.contributors.length}</p>
-              <p className="mt-1 text-sm text-tx3">{t('contributors')}</p>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+            <div className="rounded-xl border border-border bg-surface p-3 sm:p-5">
+              <p className="text-2xl font-bold text-tx sm:text-3xl">{data.contributors.length}</p>
+              <p className="mt-1 text-xs text-tx3 sm:text-sm">{t('contributors')}</p>
             </div>
-            <div className="rounded-xl border border-border bg-surface p-5">
-              <p className="text-3xl font-bold text-tx">{data.totalPosts}</p>
-              <p className="mt-1 text-sm text-tx3">{t('approvedPosts')}</p>
+            <div className="rounded-xl border border-border bg-surface p-3 sm:p-5">
+              <p className="text-2xl font-bold text-tx sm:text-3xl">{data.totalPosts}</p>
+              <p className="mt-1 text-xs text-tx3 sm:text-sm">{t('approvedPosts')}</p>
             </div>
-            <div className="rounded-xl border border-border bg-surface p-5">
-              <p className="text-3xl font-bold text-amber-600 dark:text-amber-400">₹{totalAmountDue}</p>
-              <p className="mt-1 text-sm text-tx3">{t('amountDue')} ({pendingContributors.length} {t('pending')})</p>
+            <div className="rounded-xl border border-border bg-surface p-3 sm:p-5">
+              <p className="text-2xl font-bold text-amber-600 dark:text-amber-400 sm:text-3xl">₹{totalAmountDue}</p>
+              <p className="mt-1 text-xs text-tx3 sm:text-sm">{t('amountDue')} ({pendingContributors.length} {t('pending')})</p>
             </div>
-            <div className="rounded-xl border border-border bg-surface p-5">
-              <p className="text-3xl font-bold text-green-600 dark:text-green-400">₹{data.totalPaid}</p>
-              <p className="mt-1 text-sm text-tx3">{t('amountPaid')} ({paidContributors.length} {t('paid')})</p>
+            <div className="rounded-xl border border-border bg-surface p-3 sm:p-5">
+              <p className="text-2xl font-bold text-green-600 dark:text-green-400 sm:text-3xl">₹{data.totalPaid}</p>
+              <p className="mt-1 text-xs text-tx3 sm:text-sm">{t('amountPaid')} ({paidContributors.length} {t('paid')})</p>
             </div>
           </div>
 
           {/* Pending payments */}
           {pendingContributors.length > 0 && (
             <div className="space-y-3">
-              <h2 className="text-sm font-semibold text-tx2">{t('pendingPayments')}</h2>
+              <h2 className="text-sm font-semibold text-tx2">{t('pendingPayments')} ({pendingContributors.length})</h2>
               {pendingContributors.map((c) => (
                 <ContributorCard
                   key={c.userId}
@@ -447,7 +439,7 @@ export default function PayoutsPage() {
           {/* Paid */}
           {paidContributors.length > 0 && (
             <div className="space-y-3">
-              <h2 className="text-sm font-semibold text-tx2">{t('completedPayments')}</h2>
+              <h2 className="text-sm font-semibold text-tx2">{t('completedPayments')} ({paidContributors.length})</h2>
               {paidContributors.map((c) => (
                 <ContributorCard
                   key={c.userId}
@@ -464,6 +456,8 @@ export default function PayoutsPage() {
             <p className="text-sm text-tx3">{t('noContributors')}</p>
           )}
         </div>
+      )}
+      </>
       )}
     </div>
   )
