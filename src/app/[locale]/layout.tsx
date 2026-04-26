@@ -56,10 +56,10 @@ export default async function LocaleLayout({
       <body className="flex min-h-screen flex-col font-sans">
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
-            <Navbar />
+            <div className="print:hidden"><Navbar /></div>
             <main className="flex-1">{children}</main>
-            <FloatingWriteButton />
-            <Footer />
+            <div className="print:hidden"><FloatingWriteButton /></div>
+            <div className="print:hidden"><Footer /></div>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

@@ -8,11 +8,15 @@ import {
   ResponsiveContainer, PieChart, Pie, Cell, Legend,
 } from 'recharts'
 import { getAnalyticsData, type AnalyticsData } from '@/actions/analytics.actions'
+import DateRangePicker from '@/components/DateRangePicker'
 
 const COLORS = ['#d97706', '#16a34a', '#2563eb', '#7c3aed', '#db2777', '#0891b2']
 
 function toLocalDateString(date: Date): string {
-  return date.toISOString().slice(0, 10)
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
 }
 
 function defaultRange() {
@@ -20,6 +24,25 @@ function defaultRange() {
   const from = new Date()
   from.setDate(from.getDate() - 29)
   return { from: toLocalDateString(from), to: toLocalDateString(to) }
+}
+
+function getPresets(todayStr: string) {
+  const d = (offset: number) => {
+    const dt = new Date()
+    dt.setDate(dt.getDate() + offset)
+    return toLocalDateString(dt)
+  }
+  const today = new Date()
+  const thisMonthStart = toLocalDateString(new Date(today.getFullYear(), today.getMonth(), 1))
+  const lastMonthStart = toLocalDateString(new Date(today.getFullYear(), today.getMonth() - 1, 1))
+  const lastMonthEnd = toLocalDateString(new Date(today.getFullYear(), today.getMonth(), 0))
+  return [
+    { key: 'last7d',    from: d(-6),          to: todayStr },
+    { key: 'last30d',   from: d(-29),         to: todayStr },
+    { key: 'last90d',   from: d(-89),         to: todayStr },
+    { key: 'thisMonth', from: thisMonthStart, to: todayStr },
+    { key: 'lastMonth', from: lastMonthStart, to: lastMonthEnd },
+  ]
 }
 
 function StatCard({ label, value, sub }: { label: string; value: string | number; sub?: string }) {
@@ -91,29 +114,34 @@ export default function AnalyticsPage() {
       <h1 className="mb-6 text-2xl font-bold text-tx">{t('title')}</h1>
 
       {/* Date range picker */}
-      <div className="mb-6 flex flex-wrap items-end gap-4">
-        <div>
-          <label className="mb-1 block text-xs font-medium text-tx3">{t('dateFrom')}</label>
-          <input
-            type="date"
-            value={range.from}
-            max={range.to}
-            onChange={(e) => setRange((r) => ({ ...r, from: e.target.value }))}
-            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-tx focus:outline-none focus:ring-2 focus:ring-saffron-500"
-          />
+      <div className="mb-6 space-y-2">
+        {/* Preset chips */}
+        <div className="flex flex-wrap gap-2">
+          {getPresets(toLocalDateString(new Date())).map((preset) => {
+            const active = range.from === preset.from && range.to === preset.to
+            return (
+              <button
+                key={preset.key}
+                onClick={() => setRange({ from: preset.from, to: preset.to })}
+                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                  active
+                    ? 'bg-saffron-600 text-white'
+                    : 'border border-border bg-surface text-tx2 hover:bg-surface-2'
+                }`}
+              >
+                {t(preset.key as Parameters<typeof t>[0])}
+              </button>
+            )
+          })}
         </div>
-        <div>
-          <label className="mb-1 block text-xs font-medium text-tx3">{t('dateTo')}</label>
-          <input
-            type="date"
-            value={range.to}
-            min={range.from}
-            max={toLocalDateString(new Date())}
-            onChange={(e) => setRange((r) => ({ ...r, to: e.target.value }))}
-            className="rounded-lg border border-border bg-surface px-3 py-2 text-sm text-tx focus:outline-none focus:ring-2 focus:ring-saffron-500"
+        <div className="flex items-center gap-3">
+          <DateRangePicker
+            from={range.from}
+            to={range.to}
+            onChange={(from, to) => setRange({ from, to })}
           />
+          {isPending && <span className="text-xs text-tx4">…</span>}
         </div>
-        {isPending && <p className="pb-2 text-xs text-tx4">Loading…</p>}
       </div>
 
       {data && (

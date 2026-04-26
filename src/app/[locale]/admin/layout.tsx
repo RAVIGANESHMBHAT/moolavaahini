@@ -19,19 +19,20 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { href: '/admin/review', label: t('reviewQueue') },
     { href: '/admin/users', label: t('users') },
     { href: '/admin/analytics', label: t('analytics') },
+    { href: '/admin/payouts', label: t('payouts') },
   ]
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       {/* Mobile: horizontal nav tabs */}
-      <div className="mb-6 md:hidden">
+      <div className="mb-6 md:hidden print:hidden">
         <p className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-tx4">{t('title')}</p>
         <AdminNav items={navItems} mobile />
       </div>
 
       {/* Desktop: sidebar + content */}
       <div className="md:flex md:gap-8">
-        <aside className="hidden w-48 shrink-0 md:block">
+        <aside className="hidden w-48 shrink-0 md:block print:hidden">
           <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-tx4">{t('title')}</p>
           <AdminNav items={navItems} />
         </aside>
