@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/Button'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { verifyPost, unverifyPost } from '@/actions/review.actions'
 import { useRouter } from 'next/navigation'
 
@@ -16,14 +17,28 @@ export function VerifyAction({ postId, isVerified }: VerifyActionProps) {
   const t = useTranslations('admin')
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const [open, setOpen] = useState(false)
 
-  const handleToggle = () => {
+  const handleVerify = () => {
     setError(null)
     startTransition(async () => {
-      const result = isVerified ? await unverifyPost(postId) : await verifyPost(postId)
+      const result = await verifyPost(postId)
       if (!result.success) {
         setError(result.error)
       } else {
+        router.refresh()
+      }
+    })
+  }
+
+  const handleUnverify = () => {
+    setError(null)
+    startTransition(async () => {
+      const result = await unverifyPost(postId)
+      if (!result.success) {
+        setError(result.error)
+      } else {
+        setOpen(false)
         router.refresh()
       }
     })
@@ -52,13 +67,25 @@ export function VerifyAction({ postId, isVerified }: VerifyActionProps) {
           <span className="text-xs text-tx4">{t('notVerified')}</span>
         )}
         <Button
-          variant={isVerified ? 'ghost' : 'primary'}
-          onClick={handleToggle}
-          loading={isPending}
+          variant={isVerified ? 'secondary' : 'primary'}
+          onClick={isVerified ? () => setOpen(true) : handleVerify}
+          loading={isPending && !open}
         >
           {isVerified ? t('removeVerification') : t('markVerified')}
         </Button>
       </div>
+
+      <ConfirmDialog
+        open={open}
+        onClose={() => { setOpen(false); setError(null) }}
+        onConfirm={handleUnverify}
+        title={t('removeVerificationConfirm')}
+        message={t('removeVerificationMessage')}
+        error={error}
+        confirmLabel={t('removeVerificationConfirmLabel')}
+        cancelLabel={t('cancel')}
+        loading={isPending}
+      />
     </div>
   )
 }

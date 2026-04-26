@@ -180,6 +180,9 @@
     "verifyHint": "Mark this post as verified to confirm the content has been reviewed for accuracy.",
     "markVerified": "Mark as Verified",
     "removeVerification": "Remove Verification",
+    "removeVerificationConfirm": "Remove verification?",
+    "removeVerificationMessage": "This post will no longer be marked as verified.",
+    "removeVerificationConfirmLabel": "Yes, remove",
     "verifiedLabel": "Verified",
     "notVerified": "Not yet verified",
     "approveAndVerify": "Mark as verified"

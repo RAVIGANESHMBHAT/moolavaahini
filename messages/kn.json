@@ -180,6 +180,9 @@
     "verifyHint": "ವಿಷಯವನ್ನು ನಿಖರತೆಗಾಗಿ ಪರಿಶೀಲಿಸಿದ ನಂತರ ಪ್ರಮಾಣಿತ ಎಂದು ಗುರುತಿಸಿ.",
     "markVerified": "ಪ್ರಮಾಣಿತ ಎಂದು ಗುರುತಿಸಿ",
     "removeVerification": "ಪ್ರಮಾಣೀಕರಣ ತೆಗೆದುಹಾಕಿ",
+    "removeVerificationConfirm": "ಪ್ರಮಾಣೀಕರಣ ತೆಗೆದುಹಾಕುವಿರಾ?",
+    "removeVerificationMessage": "ಈ ಲೇಖನವನ್ನು ಇನ್ನು ಮುಂದೆ ಪ್ರಮಾಣಿತ ಎಂದು ಗುರುತಿಸಲಾಗುವುದಿಲ್ಲ.",
+    "removeVerificationConfirmLabel": "ಹೌದು, ತೆಗೆದುಹಾಕಿ",
     "verifiedLabel": "ಪ್ರಮಾಣಿತ",
     "notVerified": "ಇನ್ನೂ ಪ್ರಮಾಣಿಸಲಾಗಿಲ್ಲ",
     "approveAndVerify": "ಪ್ರಮಾಣಿತ ಎಂದು ಗುರುತಿಸಿ"
