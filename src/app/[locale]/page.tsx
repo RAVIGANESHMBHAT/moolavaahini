@@ -2,28 +2,29 @@ import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { PostList } from '@/components/posts/PostList'
+import { CATEGORIES } from '@/lib/categories'
+import { COMMUNITIES } from '@/lib/communities'
 import type { PostWithDetails } from '@/types'
 
 export default async function HomePage() {
   const supabase = await createClient()
-  const t = await getTranslations('home')
-
-  const [{ data: categories }, { data: posts }] = await Promise.all([
-    supabase.from('categories').select('id, name, slug, icon').order('name'),
-    supabase
-      .from('posts')
-      .select(`*, community:communities!posts_community_id_fkey(id, name, slug), category:categories!posts_category_id_fkey(id, name, slug), author:profiles!posts_author_id_fkey(id, display_name, avatar_url)`)
-      .eq('status', 'approved')
-      .order('published_at', { ascending: false })
-      .limit(12),
+  const [t, tCat, tComm] = await Promise.all([
+    getTranslations('home'),
+    getTranslations('categories'),
+    getTranslations('communityNames'),
   ])
 
-  const typedPosts = (posts ?? []) as unknown as PostWithDetails[]
+  const { data: posts } = await supabase
+    .from('posts')
+    .select(`*, community:communities!posts_community_id_fkey(id, name, slug), category:categories!posts_category_id_fkey(id, name, slug), author:profiles!posts_author_id_fkey(id, display_name, avatar_url)`)
+    .eq('status', 'approved')
+    .order('published_at', { ascending: false })
+    .limit(12)
 
-  const communities = [
-    { name: 'Havyaka', slug: 'havyaka', description: t('havyakaDesc') },
-    { name: 'General Kannada', slug: 'general-kannada', description: t('generalKannadaDesc') },
-  ]
+  const categories = CATEGORIES.map(c => ({ slug: c.slug, name: tCat(c.nameKey), icon: c.icon }))
+  const communities = COMMUNITIES.map(c => ({ slug: c.slug, name: tComm(c.nameKey), description: t(`${c.nameKey}Desc`) }))
+
+  const typedPosts = (posts ?? []) as unknown as PostWithDetails[]
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
@@ -58,7 +59,7 @@ export default async function HomePage() {
       <section className="mb-16">
         <h2 className="mb-6 text-xl font-semibold text-tx">{t('exploreByCategory')}</h2>
         <div className="flex flex-wrap gap-3">
-          {(categories ?? []).map((cat) => (
+          {categories.map((cat) => (
             <Link
               key={cat.slug}
               href={`/search?category=${cat.slug}`}

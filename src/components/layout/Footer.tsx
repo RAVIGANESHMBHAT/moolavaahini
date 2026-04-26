@@ -18,7 +18,7 @@ export function Footer() {
           <p className="text-sm text-tx3">{t('tagline')}</p>
           <div className="flex gap-4">
             <Link href="/havyaka" className="text-sm text-tx3 hover:text-tx2">Havyaka</Link>
-            <Link href="/general-kannada" className="text-sm text-tx3 hover:text-tx2">General Kannada</Link>
+            <Link href="/samagra-kannada" className="text-sm text-tx3 hover:text-tx2">Samagra Kannada</Link>
             <Link href="/about" className="text-sm text-tx3 hover:text-tx2">{t('about')}</Link>
           </div>
         </div>

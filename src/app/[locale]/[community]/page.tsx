@@ -5,6 +5,8 @@ import { PostList } from '@/components/posts/PostList'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Pagination } from '@/components/ui/Pagination'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
+import { CATEGORIES } from '@/lib/categories'
+import { COMMUNITIES } from '@/lib/communities'
 import type { PostWithDetails } from '@/types'
 
 const PAGE_SIZE = 20
@@ -16,10 +18,10 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { community } = await params
-  const supabase = await createClient()
-  const { data } = await supabase.from('communities').select('name').eq('slug', community).single()
-  if (!data) return {}
-  return { title: `${data.name} – Cultural Content` }
+  const communityDef = COMMUNITIES.find(c => c.slug === community)
+  if (!communityDef) return {}
+  const tComm = await getTranslations('communityNames')
+  return { title: `${tComm(communityDef.nameKey)} – Cultural Content` }
 }
 
 export default async function CommunityPage({ params, searchParams }: PageProps) {
@@ -29,24 +31,30 @@ export default async function CommunityPage({ params, searchParams }: PageProps)
   const from = (page - 1) * PAGE_SIZE
   const to = from + PAGE_SIZE - 1
 
-  const [supabase, tNav, tCommunity] = await Promise.all([
+  const [supabase, tNav, tCommunity, tCat, tComm] = await Promise.all([
     createClient(),
     getTranslations('nav'),
     getTranslations('community'),
+    getTranslations('categories'),
+    getTranslations('communityNames'),
   ])
 
-  const [{ data: communityData }, { data: categories }] = await Promise.all([
-    supabase.from('communities').select('id, name').eq('slug', community).single(),
-    supabase.from('categories').select('name, slug').order('name'),
-  ])
+  const communityDef = COMMUNITIES.find(c => c.slug === community)
+  if (!communityDef) notFound()
 
-  if (!communityData) notFound()
+  const communityName = tComm(communityDef.nameKey)
+
+  // Still need id to filter posts
+  const { data: communityRow } = await supabase.from('communities').select('id').eq('slug', community).single()
+  if (!communityRow) notFound()
+
+  const categories = CATEGORIES.map(c => ({ slug: c.slug, name: tCat(c.nameKey), icon: c.icon }))
 
   const { data: posts, count } = await supabase
     .from('posts')
     .select(`*, community:communities!posts_community_id_fkey(id, name, slug), category:categories!posts_category_id_fkey(id, name, slug), author:profiles!posts_author_id_fkey(id, display_name, avatar_url)`, { count: 'exact' })
     .eq('status', 'approved')
-    .eq('community_id', communityData.id)
+    .eq('community_id', communityRow.id)
     .order('published_at', { ascending: false })
     .range(from, to)
 
@@ -59,18 +67,18 @@ export default async function CommunityPage({ params, searchParams }: PageProps)
       <div className="sticky top-16 z-30 -mx-4 border-b border-border bg-surface/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-surface/80 sm:-mx-6 sm:px-6">
         <Breadcrumb items={[
           { label: tNav('home'), href: '/' },
-          { label: communityData.name },
+          { label: communityName },
         ]} />
       </div>
       <div className="mb-8 pt-3">
-        <h1 className="text-3xl font-bold text-tx">{communityData.name}</h1>
+        <h1 className="text-3xl font-bold text-tx">{communityName}</h1>
         <p className="mt-2 text-tx3">{tCommunity('piecesOfContent', { count: count ?? 0 })}</p>
       </div>
 
       <div className="md:flex md:gap-8">
-        <Sidebar community={community} categories={categories ?? []} />
+        <Sidebar community={community} categories={categories} />
         <div className="flex-1">
-          <PostList posts={typedPosts} emptyMessage={tCommunity('noContent', { name: communityData.name })} />
+          <PostList posts={typedPosts} emptyMessage={tCommunity('noContent', { name: communityName })} />
           <Pagination page={page} totalPages={totalPages} buildHref={buildHref} />
         </div>
       </div>

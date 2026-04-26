@@ -135,7 +135,7 @@ export function PostForm({
     },
     "mane-maddu": {
       mainLabel: t("description"),
-      mainPlaceholder: t("homeRemedyPlaceholder"),
+      mainPlaceholder: t("naatiAushadhaPlaceholder"),
       useMarkdown: true,
     },
     recipe: {
@@ -148,9 +148,9 @@ export function PostForm({
       mainPlaceholder: t("ritualPlaceholder"),
       useMarkdown: true,
     },
-    "gida-moolikegalu": {
+    "naati-aushadha": {
       mainLabel: t("description"),
-      mainPlaceholder: t("plantPlaceholder"),
+      mainPlaceholder: t("naatiAushadhaPlaceholder"),
       useMarkdown: true,
     },
   };

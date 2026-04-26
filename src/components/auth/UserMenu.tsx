@@ -5,12 +5,8 @@ import Image from 'next/image'
 import { signOut } from '@/actions/auth.actions'
 import { Link, usePathname } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { COMMUNITIES } from '@/lib/communities'
 import type { UserRole } from '@/types'
-
-const COMMUNITIES = [
-  { name: 'Havyaka', slug: 'havyaka' },
-  { name: 'General Kannada', slug: 'general-kannada' },
-]
 
 interface UserMenuProps {
   profile: {
@@ -25,6 +21,7 @@ export function UserMenu({ profile }: UserMenuProps) {
   const [communityOpen, setCommunityOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const t = useTranslations('nav')
+  const tComm = useTranslations('communityNames')
   const pathname = usePathname()
 
   useEffect(() => {
@@ -90,7 +87,7 @@ export function UserMenu({ profile }: UserMenuProps) {
                         className={`flex items-center justify-between px-6 py-2 text-sm hover:bg-surface3 ${isActive ? 'font-semibold text-saffron-700 dark:text-saffron-400' : 'text-tx2'}`}
                         onClick={() => { setOpen(false); setCommunityOpen(false) }}
                       >
-                        {c.name}
+                      {tComm(c.nameKey)}
                         {isActive && (
                           <svg className="h-3.5 w-3.5 text-saffron-600 dark:text-saffron-400" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />

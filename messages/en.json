@@ -1,7 +1,7 @@
 {
   "nav": {
     "havyaka": "Havyaka",
-    "generalKannada": "General Kannada",
+    "samagraKannada": "Samagra Kannada",
     "search": "Search",
     "write": "Write",
     "community": "Community",
@@ -20,7 +20,7 @@
     "browseAll": "Browse All",
     "communities": "Communities",
     "havyakaDesc": "Traditions, rituals, and wisdom from the Havyaka Brahmin community of Karnataka",
-    "generalKannadaDesc": "Broader Kannada culture, proverbs, and heritage",
+    "samagraKannadaDesc": "Wholesome Kannada culture, proverbs, and heritage",
     "exploreByCategory": "Explore by Category",
     "recentContributions": "Recent Contributions",
     "noContent": "No content published yet. Be the first to contribute!",
@@ -43,9 +43,20 @@
     "searching": "Searching…",
     "noResults": "No results found. Try a different search."
   },
+  "communityNames": {
+    "havyaka": "Havyaka",
+    "samagraKannada": "Samagra Kannada"
+  },
   "category": {
     "all": "All",
     "categories": "Categories"
+  },
+  "categories": {
+    "ogatu": "Riddle (Ogatu)",
+    "gaade": "Proverb (Gaade)",
+    "naatiAushadha": "Natural Healing (Naati Aushadha)",
+    "recipe": "Recipe (Paaka Vidhana)",
+    "ritual": "Ritual (Aacharane)"
   },
   "community": {
     "piecesOfContent": "{count, plural, one {# piece of content} other {# pieces of content}}",
@@ -119,11 +130,10 @@
     "artha": "Artha (Meaning)",
     "arthaPlaceholder": "Explain the meaning, usage, and cultural context...",
     "description": "Description",
-    "homeRemedyPlaceholder": "Describe this home remedy...",
+    "naatiAushadhaPlaceholder": "## About\n\nDescribe the plant, ingredient, or remedy...\n\n## Medicinal Uses\n\nWhat conditions or problems does it help with?\n\n## Preparation\n\nHow to prepare and use it...\n\n## Notes\n\n",
     "recipe": "Recipe",
     "recipePlaceholder": "## Ingredients\n\n- \n\n## Method\n\n1. \n\n## Notes\n\n",
     "ritualPlaceholder": "Describe this ritual or tradition...",
-    "plantPlaceholder": "## Plant\n\n\n\n## Medicinal Uses\n\n\n\n## Preparation\n\n",
     "discard": "Discard",
     "discardConfirm": "Discard post?",
     "discardMessage": "All unsaved content will be lost.",

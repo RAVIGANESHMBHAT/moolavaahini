@@ -4,8 +4,9 @@ import { usePathname } from '@/i18n/navigation'
 import { Link } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
 import { Tooltip } from '@/components/ui/Tooltip'
+import { COMMUNITIES } from '@/lib/communities'
 
-const KNOWN_COMMUNITIES = ['havyaka', 'general-kannada']
+const KNOWN_COMMUNITIES = COMMUNITIES.map(c => c.slug)
 
 export function NavSearchLink() {
   const pathname = usePathname()

@@ -2,8 +2,9 @@
 
 import { Link, usePathname } from '@/i18n/navigation'
 import { useTranslations } from 'next-intl'
+import { COMMUNITIES } from '@/lib/communities'
 
-const COMMUNITY_SLUGS = ['havyaka', 'general-kannada']
+const COMMUNITY_SLUGS: readonly string[] = COMMUNITIES.map(c => c.slug)
 const HIDE_ON = ['/posts/new', '/admin', '/dashboard/edit']
 
 export function FloatingWriteButtonUI() {

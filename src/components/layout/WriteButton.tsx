@@ -1,8 +1,9 @@
 'use client'
 
 import { Link, usePathname } from '@/i18n/navigation'
+import { COMMUNITIES } from '@/lib/communities'
 
-const COMMUNITY_SLUGS = ['havyaka', 'general-kannada']
+const COMMUNITY_SLUGS: readonly string[] = COMMUNITIES.map(c => c.slug)
 
 export function WriteButton() {
   const pathname = usePathname()

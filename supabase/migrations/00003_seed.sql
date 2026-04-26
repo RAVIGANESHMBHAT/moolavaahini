@@ -12,6 +12,6 @@ insert into public.categories (name, slug) values
   ('Gaade',          'gaade'),
   ('Mane Maddu',     'mane-maddu'),
   ('Annapana',       'recipe'),
-  ('Acharane',       'ritual'),
+  ('Aacharane',       'ritual'),
   ('Gida Moolikegalu', 'gida-moolikegalu')
 on conflict (slug) do nothing;

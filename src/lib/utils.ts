@@ -30,7 +30,7 @@ export function truncate(text: string, maxLength: number): string {
 export function communityDisplayName(slug: string): string {
   const map: Record<string, string> = {
     'havyaka': 'Havyaka',
-    'general-kannada': 'General Kannada',
+    'samagra-kannada': 'Samagra Kannada',
   }
   return map[slug] ?? slug
 }

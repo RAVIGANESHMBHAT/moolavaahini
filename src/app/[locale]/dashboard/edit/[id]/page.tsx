@@ -6,6 +6,8 @@ import { PostForm } from '@/components/editor/PostForm'
 import { DeleteButton } from '@/components/dashboard/DeleteButton'
 import { Link } from '@/i18n/navigation'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
+import { CATEGORIES } from '@/lib/categories'
+import { COMMUNITIES } from '@/lib/communities'
 import type { Post } from '@/types'
 
 interface PageProps {
@@ -18,8 +20,12 @@ export default async function EditPostPage({ params }: PageProps) {
   const { id } = await params
   const user = await requireAuth()
   const supabase = await createClient()
-  const t = await getTranslations('editor')
-  const tDash = await getTranslations('dashboard')
+  const [t, tDash, tCat, tComm] = await Promise.all([
+    getTranslations('editor'),
+    getTranslations('dashboard'),
+    getTranslations('categories'),
+    getTranslations('communityNames'),
+  ])
 
   const { data: post } = await supabase
     .from('posts')
@@ -31,10 +37,20 @@ export default async function EditPostPage({ params }: PageProps) {
   if (post.author_id !== user.id) notFound()
   if (!['draft', 'rejected', 'approved', 'pending_review'].includes(post.status)) notFound()
 
-  const [{ data: communities }, { data: categories }] = await Promise.all([
-    supabase.from('communities').select('*').order('name'),
-    supabase.from('categories').select('*').order('name'),
+  const [{ data: communityRows }, { data: categoryRows }] = await Promise.all([
+    supabase.from('communities').select('id, slug').order('name'),
+    supabase.from('categories').select('id, slug').order('name'),
   ])
+
+  const communities = (communityRows ?? []).map(row => {
+    const def = COMMUNITIES.find(c => c.slug === row.slug)
+    return { ...row, name: def ? tComm(def.nameKey) : row.slug, description: null, created_at: '' }
+  })
+
+  const categories = (categoryRows ?? []).map(row => {
+    const def = CATEGORIES.find(c => c.slug === row.slug)
+    return { ...row, name: def ? tCat(def.nameKey) : row.slug, icon: def?.icon ?? '', created_at: '' }
+  })
 
   const typedPost = post as Post
 
@@ -73,8 +89,8 @@ export default async function EditPostPage({ params }: PageProps) {
           </div>
         </div>
         <PostForm
-          communities={communities ?? []}
-          categories={categories ?? []}
+          communities={communities}
+          categories={categories}
           post={formPost}
           mode="edit"
           pendingEditPostId={typedPost.status === 'approved' && typedPost.pending_title ? typedPost.id : undefined}

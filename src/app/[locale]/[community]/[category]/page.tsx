@@ -1,10 +1,13 @@
 import { notFound } from 'next/navigation'
+import { getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { PostList } from '@/components/posts/PostList'
 import { OgatuTable } from '@/components/posts/OgatuTable'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Pagination } from '@/components/ui/Pagination'
 import { Breadcrumb } from '@/components/ui/Breadcrumb'
+import { CATEGORIES } from '@/lib/categories'
+import { COMMUNITIES } from '@/lib/communities'
 import type { PostWithDetails } from '@/types'
 
 const PAGE_SIZE = 20
@@ -16,15 +19,11 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { community, category } = await params
-  const supabase = await createClient()
-
-  const [{ data: communityData }, { data: categoryData }] = await Promise.all([
-    supabase.from('communities').select('name').eq('slug', community).single(),
-    supabase.from('categories').select('name').eq('slug', category).single(),
-  ])
-
-  if (!communityData || !categoryData) return {}
-  return { title: `${categoryData.name} – ${communityData.name}` }
+  const [tCat, tComm] = await Promise.all([getTranslations('categories'), getTranslations('communityNames')])
+  const communityDef = COMMUNITIES.find(c => c.slug === community)
+  const categoryDef = CATEGORIES.find(c => c.slug === category)
+  if (!communityDef || !categoryDef) return {}
+  return { title: `${tCat(categoryDef.nameKey)} – ${tComm(communityDef.nameKey)}` }
 }
 
 export default async function CategoryPage({ params, searchParams }: PageProps) {
@@ -35,14 +34,22 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const to = from + PAGE_SIZE - 1
 
   const supabase = await createClient()
+  const [tCat, tComm, tNav] = await Promise.all([getTranslations('categories'), getTranslations('communityNames'), getTranslations('nav')])
 
-  const [{ data: communityData }, { data: categoryData }, { data: categories }] = await Promise.all([
-    supabase.from('communities').select('id, name').eq('slug', community).single(),
-    supabase.from('categories').select('id, name, slug').eq('slug', category).single(),
-    supabase.from('categories').select('name, slug').order('name'),
+  const communityDef = COMMUNITIES.find(c => c.slug === community)
+  if (!communityDef) notFound()
+  const communityName = tComm(communityDef.nameKey)
+
+  const [{ data: communityData }, { data: categoryData }] = await Promise.all([
+    supabase.from('communities').select('id').eq('slug', community).single(),
+    supabase.from('categories').select('id, slug').eq('slug', category).single(),
   ])
 
   if (!communityData || !categoryData) notFound()
+
+  const categoryDef = CATEGORIES.find(c => c.slug === categoryData.slug)
+  const categoryName = categoryDef ? tCat(categoryDef.nameKey) : categoryData.slug
+  const categories = CATEGORIES.map(c => ({ slug: c.slug, name: tCat(c.nameKey), icon: c.icon }))
 
   const { data: posts, count } = await supabase
     .from('posts')
@@ -61,18 +68,18 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
     <div className="mx-auto max-w-7xl px-4 pb-10 sm:px-6">
       <div className="sticky top-16 z-30 -mx-4 border-b border-border bg-surface/95 px-4 py-3 backdrop-blur supports-[backdrop-filter]:bg-surface/80 sm:-mx-6 sm:px-6">
         <Breadcrumb items={[
-          { label: 'Home', href: '/' },
-          { label: communityData.name, href: `/${community}` },
-          { label: categoryData.name },
+          { label: tNav('home'), href: '/' },
+          { label: communityName, href: `/${community}` },
+          { label: categoryName },
         ]} />
       </div>
       <div className="mb-8 pt-3">
-        <h1 className="text-3xl font-bold text-tx">{categoryData.name}</h1>
+        <h1 className="text-3xl font-bold text-tx">{categoryName}</h1>
         <p className="mt-2 text-tx3">{count ?? 0} piece{(count ?? 0) !== 1 ? 's' : ''} of content</p>
       </div>
 
       <div className="md:flex md:gap-8">
-        <Sidebar community={community} categories={categories ?? []} />
+        <Sidebar community={community} categories={categories} />
         <div className="flex-1">
           {categoryData.slug === 'ogatu' ? (
             <>
@@ -81,7 +88,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
             </>
           ) : (
             <>
-              <PostList posts={typedPosts} emptyMessage={`No ${categoryData.name} content from ${communityData.name} yet.`} />
+              <PostList posts={typedPosts} emptyMessage={`No ${categoryName} content from ${communityName} yet.`} />
               <Pagination page={page} totalPages={totalPages} buildHref={buildHref} />
             </>
           )}
