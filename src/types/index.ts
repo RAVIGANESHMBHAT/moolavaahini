@@ -50,6 +50,10 @@ export interface Post {
   pending_community_id: string | null
   pending_category_id: string | null
   pending_submitted_at: string | null
+  // Verification — admin-only, applies to naati-aushadha posts
+  is_verified: boolean
+  verified_at: string | null
+  verified_by: string | null
 }
 
 // ── Joined / composite types ────────────────────────────────

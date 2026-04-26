@@ -10,9 +10,10 @@ import { useRouter } from "next/navigation";
 interface ReviewActionsProps {
   postId: string;
   postUpdatedAt: string;
+  categorySlug?: string;
 }
 
-export function ReviewActions({ postId, postUpdatedAt }: ReviewActionsProps) {
+export function ReviewActions({ postId, postUpdatedAt, categorySlug }: ReviewActionsProps) {
   const router = useRouter();
   const t = useTranslations("admin");
   const [isApproving, startApprove] = useTransition();
@@ -20,11 +21,14 @@ export function ReviewActions({ postId, postUpdatedAt }: ReviewActionsProps) {
   const [showRejectForm, setShowRejectForm] = useState(false);
   const [reason, setReason] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [verify, setVerify] = useState(false);
+
+  const isNaatiAushadha = categorySlug === "naati-aushadha";
 
   const handleApprove = () => {
     setError(null);
     startApprove(async () => {
-      const result = await approvePost(postId, postUpdatedAt);
+      const result = await approvePost(postId, postUpdatedAt, verify);
       if (!result.success) {
         setError(result.error);
       } else {
@@ -60,13 +64,26 @@ export function ReviewActions({ postId, postUpdatedAt }: ReviewActionsProps) {
       )}
 
       {!showRejectForm ? (
-        <div className="flex flex-wrap justify-end gap-3">
-          <Button variant="danger" onClick={() => setShowRejectForm(true)} disabled={isApproving || isRejecting}>
-            {t("reject")}
-          </Button>
-          <Button variant="primary" onClick={handleApprove} loading={isApproving} disabled={isRejecting}>
-            {t("approve")}
-          </Button>
+        <div className="space-y-3">
+          {isNaatiAushadha && (
+            <label className="flex cursor-pointer items-center gap-2 text-sm text-tx2">
+              <input
+                type="checkbox"
+                checked={verify}
+                onChange={(e) => setVerify(e.target.checked)}
+                className="h-4 w-4 rounded border-border accent-green-600"
+              />
+              {t("approveAndVerify")}
+            </label>
+          )}
+          <div className="flex flex-wrap justify-end gap-3">
+            <Button variant="danger" onClick={() => setShowRejectForm(true)} disabled={isApproving || isRejecting}>
+              {t("reject")}
+            </Button>
+            <Button variant="primary" onClick={handleApprove} loading={isApproving} disabled={isRejecting}>
+              {t("approve")}
+            </Button>
+          </div>
         </div>
       ) : (
         <div className="space-y-3">

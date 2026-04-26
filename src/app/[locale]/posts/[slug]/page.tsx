@@ -2,8 +2,10 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getSession } from '@/lib/auth'
 import { getUserRole } from '@/lib/roles'
+import { getTranslations } from 'next-intl/server'
 import { PostDetail } from '@/components/posts/PostDetail'
 import { ReviewActions } from '@/components/admin/ReviewActions'
+import { VerifyAction } from '@/components/admin/VerifyAction'
 import { DeleteButton } from '@/components/dashboard/DeleteButton'
 import { PostStatusBadge } from '@/components/posts/PostStatusBadge'
 import { Link } from '@/i18n/navigation'
@@ -25,6 +27,7 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function PostPage({ params }: PageProps) {
   const { slug } = await params
   const supabase = await createClient()
+  const t = await getTranslations('post')
 
   const { data: post } = await supabase
     .from('posts')
@@ -70,7 +73,7 @@ export default async function PostPage({ params }: PageProps) {
           <div className="mb-6 flex items-center justify-end gap-2">
             {canEdit && (
               <Link href={`/dashboard/edit/${typedPost.id}`} className="inline-flex items-center justify-center rounded-lg border border-border2 px-3 py-1.5 text-xs font-medium text-tx2 hover:bg-surface2">
-                Edit
+                {t('edit')}
               </Link>
             )}
             <DeleteButton postId={typedPost.id} />
@@ -82,7 +85,7 @@ export default async function PostPage({ params }: PageProps) {
         <div className="mb-6 flex items-center gap-3 rounded-xl border border-[var(--color-warn-border)] bg-[var(--color-warn-bg)] px-4 py-3">
           <PostStatusBadge status={typedPost.status} />
           {typedPost.status === 'rejected' && typedPost.rejection_reason && (
-            <span className="text-sm text-tx2">Feedback: {typedPost.rejection_reason}</span>
+            <span className="text-sm text-tx2">{t('feedback')} {typedPost.rejection_reason}</span>
           )}
         </div>
       )}
@@ -121,7 +124,13 @@ export default async function PostPage({ params }: PageProps) {
 
       {canReview && (
         <div className="mt-8">
-          <ReviewActions postId={typedPost.id} postUpdatedAt={typedPost.updated_at} />
+          <ReviewActions postId={typedPost.id} postUpdatedAt={typedPost.updated_at} categorySlug={typedPost.category.slug} />
+        </div>
+      )}
+
+      {isReviewer && typedPost.status === 'approved' && typedPost.category.slug === 'naati-aushadha' && (
+        <div className="mt-6">
+          <VerifyAction postId={typedPost.id} isVerified={typedPost.is_verified} />
         </div>
       )}
       </div>

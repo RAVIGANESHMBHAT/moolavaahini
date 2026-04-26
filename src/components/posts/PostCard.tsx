@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { getTranslations } from 'next-intl/server'
 import { Badge } from '@/components/ui/Badge'
+import { Tooltip } from '@/components/ui/Tooltip'
 import { PostStatusBadge } from './PostStatusBadge'
 import { formatDate, truncate } from '@/lib/utils'
 import type { PostWithDetails } from '@/types'
@@ -10,7 +12,8 @@ interface PostCardProps {
   showStatus?: boolean
 }
 
-export function PostCard({ post, showStatus = false }: PostCardProps) {
+export async function PostCard({ post, showStatus = false }: PostCardProps) {
+  const t = await getTranslations('post')
   const isOgatu = post.category.slug === 'ogatu'
   const preview = isOgatu ? null : truncate(post.body.replace(/[#*`>_~\[\]]/g, ''), 160)
 
@@ -23,9 +26,21 @@ export function PostCard({ post, showStatus = false }: PostCardProps) {
           {showStatus && <PostStatusBadge status={post.status} />}
         </div>
 
-        <h2 className="mb-2 text-lg font-semibold text-tx group-hover:text-saffron-700 dark:group-hover:text-saffron-400 line-clamp-2">
-          {post.title}
-        </h2>
+        <div className="mb-2">
+          <h2 className="text-lg font-semibold text-tx group-hover:text-saffron-700 dark:group-hover:text-saffron-400 line-clamp-2">
+            {post.title}
+          </h2>
+          {post.is_verified && (
+            <Tooltip label={t('verifiedDescription')} placement="left" popupClassName="whitespace-normal w-56">
+              <span className="mt-1.5 inline-flex cursor-default items-center gap-1 text-xs font-semibold text-green-700 dark:text-green-400">
+                <svg className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+                </svg>
+                {t('verified')}
+              </span>
+            </Tooltip>
+          )}
+        </div>
 
         {isOgatu ? (
           <p className="mb-4 text-xs font-medium text-saffron-600 dark:text-saffron-400">🤔 Can you guess the answer?</p>

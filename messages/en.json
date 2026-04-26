@@ -33,7 +33,9 @@
     "translate": "Translate to English",
     "translating": "Translating…",
     "translationNote": "AI-translated · Original content is in Kannada",
-    "viewOriginal": "View original"
+    "viewOriginal": "View original",
+    "verified": "Verified",
+    "verifiedDescription": "This content has been reviewed and verified for accuracy by our editorial team."
   },
   "search": {
     "title": "Search",
@@ -173,7 +175,14 @@
     "joinedCol": "Joined",
     "roleCol": "Role",
     "noName": "No name",
-    "youSuffix": "(you)"
+    "youSuffix": "(you)",
+    "verifySection": "Verification",
+    "verifyHint": "Mark this post as verified to confirm the content has been reviewed for accuracy.",
+    "markVerified": "Mark as Verified",
+    "removeVerification": "Remove Verification",
+    "verifiedLabel": "Verified",
+    "notVerified": "Not yet verified",
+    "approveAndVerify": "Mark as verified"
   },
   "errors": {
     "translationFailed": "Translation failed. Please try again."

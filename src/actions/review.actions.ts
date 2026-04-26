@@ -10,9 +10,11 @@ export type ReviewResult =
   | { success: true }
   | { success: false; error: string }
 
-export async function approvePost(id: string, updatedAt: string): Promise<ReviewResult> {
+export async function approvePost(id: string, updatedAt: string, verify = false): Promise<ReviewResult> {
   const user = await requireAuth()
   await requireRole(user.id, 'admin')
+
+  const shouldVerify = verify === true
 
   const supabase = await createClient()
 
@@ -38,6 +40,9 @@ export async function approvePost(id: string, updatedAt: string): Promise<Review
         reviewer_id: user.id,
         published_at: new Date().toISOString(),
         rejection_reason: null,
+        is_verified: shouldVerify,
+        verified_at: shouldVerify ? new Date().toISOString() : null,
+        verified_by: shouldVerify ? user.id : null,
       })
       .eq('id', id)
 
@@ -147,6 +152,57 @@ export async function rejectPost(id: string, reason: string, updatedAt: string):
   }
 
   revalidatePath('/admin/review')
+  revalidatePath(`/posts/${post.slug}`)
+  return { success: true }
+}
+
+export async function verifyPost(id: string): Promise<ReviewResult> {
+  const user = await requireAuth()
+  await requireRole(user.id, 'admin')
+
+  const supabase = await createClient()
+
+  const { data: post } = await supabase
+    .from('posts')
+    .select('slug, status')
+    .eq('id', id)
+    .single()
+
+  if (!post) return { success: false, error: 'Post not found' }
+  if (post.status !== 'approved') return { success: false, error: 'Only approved posts can be verified' }
+
+  const { error } = await supabase
+    .from('posts')
+    .update({ is_verified: true, verified_at: new Date().toISOString(), verified_by: user.id })
+    .eq('id', id)
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath(`/posts/${post.slug}`)
+  return { success: true }
+}
+
+export async function unverifyPost(id: string): Promise<ReviewResult> {
+  const user = await requireAuth()
+  await requireRole(user.id, 'admin')
+
+  const supabase = await createClient()
+
+  const { data: post } = await supabase
+    .from('posts')
+    .select('slug')
+    .eq('id', id)
+    .single()
+
+  if (!post) return { success: false, error: 'Post not found' }
+
+  const { error } = await supabase
+    .from('posts')
+    .update({ is_verified: false, verified_at: null, verified_by: null })
+    .eq('id', id)
+
+  if (error) return { success: false, error: error.message }
+
   revalidatePath(`/posts/${post.slug}`)
   return { success: true }
 }

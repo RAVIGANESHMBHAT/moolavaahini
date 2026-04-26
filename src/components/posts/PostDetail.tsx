@@ -3,7 +3,9 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/Badge";
+import { Tooltip } from "@/components/ui/Tooltip";
 import { formatDate } from "@/lib/utils";
 import { useTheme } from "@/lib/theme";
 import type { PostWithDetails } from "@/types";
@@ -20,6 +22,7 @@ interface PostDetailProps {
 export function PostDetail({ post, isAuthor }: PostDetailProps) {
   const [answerRevealed, setAnswerRevealed] = useState(false);
   const { theme } = useTheme();
+  const t = useTranslations("post");
 
   const isRevealCategory = post.category.slug === "ogatu";
 
@@ -30,9 +33,21 @@ export function PostDetail({ post, isAuthor }: PostDetailProps) {
         <Badge variant="blue">{post.category.name}</Badge>
       </div>
 
-      <h1 className="mb-6 text-3xl font-bold leading-tight text-tx sm:text-4xl">
-        {post.title}
-      </h1>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold leading-tight text-tx sm:text-4xl">
+          {post.title}
+        </h1>
+        {post.is_verified && (
+          <Tooltip label={t("verifiedDescription")} placement="left" popupClassName="whitespace-normal w-64">
+            <div className="mt-3 inline-flex cursor-default items-center gap-1.5 rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-800 dark:bg-green-900/40 dark:text-green-300">
+              <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+              </svg>
+              {t("verified")}
+            </div>
+          </Tooltip>
+        )}
+      </div>
 
       <div className="mb-8 flex items-center gap-3 border-b border-border pb-6">
         {post.author.avatar_url ? (

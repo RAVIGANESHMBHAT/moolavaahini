@@ -33,7 +33,9 @@
     "translate": "ಇಂಗ್ಲಿಷ್‌ಗೆ ಅನುವಾದಿಸಿ",
     "translating": "ಅನುವಾದಿಸಲಾಗುತ್ತಿದೆ…",
     "translationNote": "AI ಅನುವಾದ · ಮೂಲ ವಿಷಯ ಕನ್ನಡದಲ್ಲಿದೆ",
-    "viewOriginal": "ಮೂಲ ನೋಡಿ"
+    "viewOriginal": "ಮೂಲ ನೋಡಿ",
+    "verified": "ಪ್ರಮಾಣಿತ",
+    "verifiedDescription": "ಈ ವಿಷಯವನ್ನು ನಮ್ಮ ತಂಡದಿಂದ ನಿಖರತೆಗಾಗಿ ಪರಿಶೀಲಿಸಿ ಖಚಿತಪಡಿಸಲಾಗಿದೆ."
   },
   "search": {
     "title": "ಹುಡುಕು",
@@ -173,7 +175,14 @@
     "joinedCol": "ಸೇರಿದ ದಿನ",
     "roleCol": "ಪಾತ್ರ",
     "noName": "ಹೆಸರಿಲ್ಲ",
-    "youSuffix": "(ನೀವು)"
+    "youSuffix": "(ನೀವು)",
+    "verifySection": "ಪ್ರಮಾಣೀಕರಣ",
+    "verifyHint": "ವಿಷಯವನ್ನು ನಿಖರತೆಗಾಗಿ ಪರಿಶೀಲಿಸಿದ ನಂತರ ಪ್ರಮಾಣಿತ ಎಂದು ಗುರುತಿಸಿ.",
+    "markVerified": "ಪ್ರಮಾಣಿತ ಎಂದು ಗುರುತಿಸಿ",
+    "removeVerification": "ಪ್ರಮಾಣೀಕರಣ ತೆಗೆದುಹಾಕಿ",
+    "verifiedLabel": "ಪ್ರಮಾಣಿತ",
+    "notVerified": "ಇನ್ನೂ ಪ್ರಮಾಣಿಸಲಾಗಿಲ್ಲ",
+    "approveAndVerify": "ಪ್ರಮಾಣಿತ ಎಂದು ಗುರುತಿಸಿ"
   },
   "errors": {
     "translationFailed": "ಅನುವಾದ ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
